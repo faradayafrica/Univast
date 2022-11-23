@@ -3,6 +3,7 @@ from .models import (
     Country,
     School,
     Faculty,
+    Degree,
     Department
 )
 
@@ -25,13 +26,20 @@ class AdminFaculty(admin.ModelAdmin):
     empty_value_display = '-empty field-'
     
 class AdminDepartment(admin.ModelAdmin):
-    list_display = ('faculty', 'name', 'degree', 'duration')
+    list_display = ('faculty', 'name', 'duration')
     search_fields = ('name', 'degree', 'duration')
     list_filter = ('degree', 'faculty', 'duration')
+    empty_value_display = '-empty field-'
+
+class AdminDegree(admin.ModelAdmin):
+    list_display = ('name', 'code')
+    search_fields = ('name', 'code')
+    list_filter = ('name', 'code')
     empty_value_display = '-empty field-'
 
 
 admin.site.register(Country, AdminCountry)
 admin.site.register(School, AdminSchool)
 admin.site.register(Faculty, AdminFaculty)
+admin.site.register(Degree, AdminDegree)
 admin.site.register(Department, AdminDepartment)

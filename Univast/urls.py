@@ -8,13 +8,17 @@ from rest_framework_swagger.views import get_swagger_view
 # Swagger docs
 schema_view = get_swagger_view(title='Univast API')
 
+from academia import views
+
 urlpatterns = [
+    
+    path('', views.home, name="homepage"),
      
-    path('', include('academia.urls')),
+    path('academia/', include('academia.urls')),
     
     # Admin site
     path('api/auth/admin/', admin.site.urls),
     
     # Documentation by swagger
-    path('api/auth/docs/', schema_view),
+    path('api/auth/docs/', schema_view, name="documentation"),
 ]

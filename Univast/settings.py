@@ -22,6 +22,7 @@ ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'faraday.africa').split(" ")
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_volt.apps.AdminVoltConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,12 +36,14 @@ INSTALLED_APPS = [
     # third party packages
     'rest_framework',
     'rest_framework_swagger',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -73,6 +76,9 @@ WSGI_APPLICATION = 'Univast.wsgi.application'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.faraday\.africa$",
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
