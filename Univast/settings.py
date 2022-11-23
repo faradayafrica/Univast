@@ -74,6 +74,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://\w+\.faraday\.africa$",
 ]
 
+CSRF_TRUSTED_ORIGINS=['https://univast.faraday.africa', 'https://univast.azurewebsites.net']
+
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
