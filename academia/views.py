@@ -33,6 +33,22 @@ from .utills import (
 def home(request):
     return render(request, "academia/index.html", {})
 
+# Cutom 404 handler
+def custom_page_not_found_view(request, exception):
+    return render(request, "academia/404.html", {})
+
+# Cutom 500 handler
+def custom_error_view(request, exception=None):
+    return render(request, "academia/500.html", {})
+
+# Cutom 403 handler
+def custom_permission_denied_view(request, exception=None):
+    return render(request, "academia/403.html", {})
+
+# Cutom 400 handler
+def custom_bad_request_view(request, exception=None):
+    return render(request, "academia/400.html", {})
+
 # Fetches All Countries
 @api_view(['GET'])
 @permission_classes((AllowAny,))
