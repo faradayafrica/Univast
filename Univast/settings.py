@@ -8,16 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('DJANGO_SECRET_KEY', get_random_secret_key())
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1%rmy^7@)2gl%m64x2&mr7t*x*z$297&jn1lr@jq00o5y)u3*1'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'faraday.africa').split(" ")
+ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'univast.faraday.africa').split(" ")
 
 # Application definition
 
