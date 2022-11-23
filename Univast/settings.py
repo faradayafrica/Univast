@@ -15,7 +15,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', get_random_secret_key())
 SECRET_KEY = 'django-insecure-1%rmy^7@)2gl%m64x2&mr7t*x*z$297&jn1lr@jq00o5y)u3*1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = False
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'faraday.africa').split(" ")
 
