@@ -22,3 +22,8 @@ urlpatterns = [
     # Documentation by swagger
     path('api/auth/docs/', schema_view, name="documentation"),
 ]
+
+handler400 = 'academia.views.custom_bad_request_view'
+handler403 = 'academia.views.custom_permission_denied_view'
+handler404 = 'academia.views.custom_page_not_found_view'
+handler500 = 'academia.views.custom_error_view'
