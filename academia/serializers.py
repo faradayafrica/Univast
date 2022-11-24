@@ -58,6 +58,8 @@ class SchoolSerializer(serializers.ModelSerializer):
             'logo',
             'ownership',
             'owned_by',
+            'founded',
+            'address',
             ]
         
     def get_logo(self, obj):
