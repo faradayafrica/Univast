@@ -6,10 +6,10 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('DJANGO_SECRET_KEY', get_random_secret_key())
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'univast.faraday.africa').split(" ")
 
