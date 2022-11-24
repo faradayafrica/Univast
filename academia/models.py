@@ -31,17 +31,31 @@ class Country(models.Model):
 class School(models.Model):
     
     CHOICES = (
-        ('university', 'university'),
-        ('polytechnic', 'polytechnic'),
-        ('monotechnic', 'monotechnic'),
-        ('college', 'college'),
+        ('University', 'University'),
+        ('Polytechnic', 'Polytechnic'),
+        ('Monotechnic', 'Monotechnic'),
+        ('College', 'College'),
+    )
+    
+    OWNERSHIP = (
+        ('Public', 'Public'),
+        ('Private', 'Private'),
+    )
+    
+    OWNED_BY = (
+        ('Federal', 'Federal'),
+        ('State', 'State'),
     )
     
     id = models.UUIDField(default=uuid.uuid4,  unique=True, primary_key=True, editable=False)
     listed = models.BooleanField(default=True, help_text="Tick to indicate no longer valid and will not be returned in API calls.")
-    type = models.CharField(max_length=20, choices=CHOICES, help_text="The type of higher intitution.")
+    type = models.CharField(max_length=20, blank=False, choices=CHOICES, help_text="The type of higher intitution.")
     name = models.CharField(max_length=500, null=False, blank=True, help_text="The name of the school.")
     code = models.CharField(max_length=50, null=False, blank=True, help_text="The asociated school short code, e.g Unizik.")
+    ownership = models.CharField(max_length=20, blank=False, choices=OWNERSHIP, help_text="The ownership status of this intitution, is it public or private?", default='None')
+    owned_by = models.CharField(max_length=20, blank=True, choices=OWNED_BY, help_text="If it's a Public intitution, is it federal owned or state owned?", default='None')
+    website = models.URLField(max_length=50, null=True, blank=True,  help_text="The website of this institution")
+    logo = models.ImageField(null=True, blank=True, help_text="The logo of this institution", default='logo.png')
     country = models.ManyToManyField(Country, blank=True, related_name="school_country")
     faculties = models.ManyToManyField('Faculty', blank=True, related_name="child_faculties", editable=False)
     departments = models.ManyToManyField('Department', blank=True, related_name="child_departments", editable=False)
