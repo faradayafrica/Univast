@@ -1,5 +1,7 @@
 # Django imports
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 
 # Swagger docs
@@ -21,7 +23,8 @@ urlpatterns = [
     
     # Documentation by swagger
     path('api/auth/docs/', schema_view, name="documentation"),
-]
+] 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler400 = 'academia.views.custom_bad_request_view'
 handler403 = 'academia.views.custom_permission_denied_view'
