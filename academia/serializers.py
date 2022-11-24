@@ -46,13 +46,24 @@ class SchoolSerializer(serializers.ModelSerializer):
     :param: Request and/or object
     :return: Serilized data specified by provided fields
     """
+    
+    logo = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = School
         fields = [
             'type',
             'name',
-            'code'
-            ]    
+            'code',
+            'website',
+            'logo',
+            'ownership',
+            'owned_by',
+            ]
+        
+    def get_logo(self, obj):
+        request = self.context.get("request")
+        logo = request.scheme + '://' + request.META['HTTP_HOST'] + '/images/' + str(obj.logo)
+        return logo
 
 class FacultySerializer(serializers.ModelSerializer):
     """
