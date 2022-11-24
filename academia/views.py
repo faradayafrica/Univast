@@ -95,7 +95,7 @@ def SchoolList(request):
             
             schools = School.objects.filter(country=country)
             
-            serializer = SchoolSerializer(schools, many=True)
+            serializer = SchoolSerializer(schools, many=True, context={'request': request})
             
             payload = SuccessResponse("Success", f"Retrieved all schools in {country_name}", serializer)
             return Response(data=payload, status=status.HTTP_200_OK)
