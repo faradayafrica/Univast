@@ -16,7 +16,6 @@ ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'univast.faraday.africa').split("
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_volt.apps.AdminVoltConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +29,7 @@ INSTALLED_APPS = [
     # third party packages
     'rest_framework',
     'rest_framework_swagger',
+    "rest_framework_api_key",
     "corsheaders",
 ]
 
