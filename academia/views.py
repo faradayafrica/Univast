@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import filters, views, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_api_key.permissions import HasAPIKey
 
 # Own imports
 from .models import (
@@ -51,7 +52,7 @@ def custom_bad_request_view(request, exception=None):
 
 # Fetches All Countries
 @api_view(['GET'])
-@permission_classes((AllowAny,))
+@permission_classes((HasAPIKey,))
 def CountryList(request):
     try:
         countries = Country.objects.all()
@@ -67,7 +68,7 @@ def CountryList(request):
 
 # Fetch Schools in a Country
 @api_view(['GET'])
-@permission_classes((AllowAny,))
+@permission_classes((HasAPIKey,))
 def SchoolList(request):
     
     # initialize empty array to hold error message(s)
@@ -106,7 +107,7 @@ def SchoolList(request):
 
 # Fetch all Faculties in a School
 @api_view(['GET'])
-@permission_classes((AllowAny,))
+@permission_classes((HasAPIKey,))
 def FacultyList(request):
     # initialize empty array to hold error message(s)
     messages = {'errors': []}
@@ -144,7 +145,7 @@ def FacultyList(request):
 
 # Fetch all Departments in a Faculty.
 @api_view(['GET'])
-@permission_classes((AllowAny,))
+@permission_classes((HasAPIKey,))
 def DepartmentList(request):
     # initialize empty array to hold error message(s)
     messages = {'errors': []}
