@@ -16,7 +16,7 @@ class AdminCountry(admin.ModelAdmin):
 class AdminSchool(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'owned_by', 'listed',) 
     search_fields = ('name', 'country',)
-    list_filter = ('country', 'type', 'listed')
+    list_filter = ('country', 'type', 'owned_by', 'listed')
     empty_value_display = '-empty field-'
 
 class AdminFaculty(admin.ModelAdmin):
