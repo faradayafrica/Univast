@@ -43,6 +43,7 @@ class School(models.Model):
     )
     
     OWNED_BY = (
+        ('Private', 'Private'),
         ('Federal', 'Federal'),
         ('State', 'State'),
     )
