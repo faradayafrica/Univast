@@ -5,23 +5,21 @@ from rest_framework import exceptions
 from academia.models import School, Country
 
 
-def get_school(country: str) -> School:
+def get_school(code: str) -> str:
     """
-    This function checks if a school exist for the provided country,
+    This function checks if a school exist with the provided code,
     raises an NotFound except if it does not.
 
-    :param country: str - This is the country name that we want
+    :param code: str - This is the school code that we want
         to get the school for
-    :type country: str
+    :type code: str
 
-    :return: A school object
+    :return: The school code.
     """
 
-    school = School.objects.filter(country__name=country).first()
-
-    if school is None:
+    if not School.objects.filter(code=code).exists():
         raise exceptions.NotFound({"message": "School does not exist!"})
-    return school
+    return code
 
 
 def get_country(country: str) -> str:
