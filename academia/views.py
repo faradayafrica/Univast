@@ -46,25 +46,25 @@ def custom_bad_request_view(request, exception=None):
     return render(request, "academia/400.html", {})
 
 
-# Fetches All Countries
-@api_view(["GET"])
-@permission_classes((HasAPIKey,))
-def CountryList(request):
-    try:
-        countries = Country.objects.all()
-        serializer = CountrySerializer(countries, many=True)
+class CountryListView(generics.ListAPIView):
+    serializer_class = CountrySerializer
+    permission_classes = (HasAPIKey,)
+    queryset = Country.objects.only("name", "country_code")
+
+    def get(self, request: Request) -> Response:
+        """
+        This API retrieves the list of countries (name and code).
+        """
+
+        countries = self.get_queryset()
+        serializer = self.serializer_class(countries, many=True)
 
         payload = success_response(
-            "Success", "Retrieved all countries", serializer
+            status=True,
+            message="Retrieved all countries!",
+            serializer=serializer.data,
         )
-        return Response(data=payload, status=status.HTTP_200_OK)
-
-    except Exception as e:
-
-        payload = error_response("Error", {"details": f"{e}"})
-        return Response(
-            data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+        return Response(payload, status=status.HTTP_200_OK)
 
 
 # Fetch Schools in a Country
