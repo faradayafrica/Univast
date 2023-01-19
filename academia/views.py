@@ -20,7 +20,7 @@ from academia.serializers import (
     FacultySerializer,
     DepartmentSerializer,
 )
-from academia.selectors import get_country
+from academia.selectors import get_country, get_school
 
 # Third Party Imports
 from rest_api_payload import success_response, error_response
@@ -92,7 +92,7 @@ class SchoolListAPIView(generics.ListAPIView):
         """
         This API view retrieves the list of schools.
 
-        :param country_name: the name of country you wish to get the list of available schools in
+        :param country_name: the name of country you wish to get the list of available schools in.
         :type country_name: str
         """
         schools = self.get_queryset()
@@ -121,48 +121,33 @@ class SchoolListAPIView(generics.ListAPIView):
         return self.queryset.filter(country__name=country)
 
 
-# Fetch all Faculties in a School
-@api_view(["GET"])
-@permission_classes((HasAPIKey,))
-def FacultyList(request):
-    # initialize empty array to hold error message(s)
-    messages = {"errors": []}
+class SchoolFacultyListAPIView(generics.ListAPIView):
+    serializer_class = FacultySerializer
+    permission_classes = (HasAPIKey,)
+    queryset = Faculty.objects.only("id", "name")
 
-    # get required parameters
-    school_name = request.data.get("school")
+    def get(self, request: Request, school_code: str) -> Response:
+        """
+        This API view retrieves the list of faculties in a school.
 
-    # perform validations for required parameters
-    if not school_name or school_name == "":
-        messages["errors"].append("Please provide the School name")
-
-    # return an error with error messages for failed validations
-    if len(messages["errors"]) > 0:
-
-        payload = error_response("Error", {"detail": messages["errors"]})
-        return Response(data=payload, status=status.HTTP_400_BAD_REQUEST)
-
-    else:
-
-        try:
-
-            school = School.objects.get(name=school_name)
-
-            faculties = Faculty.objects.filter(school=school)
-
-            serializer = FacultySerializer(faculties, many=True)
-
-            payload = success_response(
-                "Success",
-                f"Retrieved all schools in {school_name}",
-                serializer,
-            )
-            return Response(data=payload, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            payload = error_response("Error", {"details": f"{e}"})
-        return Response(
-            data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        :param school_code: the name of school you wish to get the list of available faculties in.
+        :type school_code: str
+        """
+        schools = self.get_queryset(school_code)
+        serializer = self.serializer_class(
+            schools, many=True, context={"request": request}
         )
+
+        response = success_response(
+            status=True,
+            message=f"Retrieved all faculties!",
+            data=serializer.data,
+        )
+        return Response(data=response, status=status.HTTP_200_OK)
+
+    def get_queryset(self, code: str) -> List[QuerySet]:
+        school_code = get_school(code)
+        return self.queryset.filter(school__code=school_code)
 
 
 # Fetch all Departments in a Faculty.
