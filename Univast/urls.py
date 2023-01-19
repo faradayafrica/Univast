@@ -8,6 +8,9 @@ from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+# Own Imports
+from Univast.schema_generator import CustomSchemaGenerator
+
 
 # Swagger docs
 schema_view = get_schema_view(
@@ -18,6 +21,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="engineering@faraday.africa"),
     ),
     public=True,
+    generator_class=CustomSchemaGenerator,
 )
 
 from academia import views
