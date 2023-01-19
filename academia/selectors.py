@@ -2,7 +2,7 @@
 from rest_framework import exceptions
 
 # Own Imports
-from academia.models import School
+from academia.models import School, Country
 
 
 def get_school(country: str) -> School:
@@ -22,3 +22,19 @@ def get_school(country: str) -> School:
     if school is None:
         raise exceptions.NotFound({"message": "School does not exist!"})
     return school
+
+
+def get_country(country: str) -> str:
+    """
+    This function returns the country name if it exists,
+    otherwise it raises a NotFound exception.
+
+    :param country: str - This is the parameter that will be passed in the URL
+    :type country: str
+
+    :return: The country name.
+    """
+
+    if not Country.objects.filter(name=country).exists():
+        raise exceptions.NotFound({"message": "Country not found!"})
+    return country
