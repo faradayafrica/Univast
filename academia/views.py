@@ -46,7 +46,7 @@ def custom_bad_request_view(request, exception=None):
     return render(request, "academia/400.html", {})
 
 
-class CountryListView(generics.ListAPIView):
+class CountryListAPIView(generics.ListAPIView):
     serializer_class = CountrySerializer
     permission_classes = (HasAPIKey,)
     queryset = Country.objects.only("name", "country_code")
@@ -62,7 +62,7 @@ class CountryListView(generics.ListAPIView):
         payload = success_response(
             status=True,
             message="Retrieved all countries!",
-            serializer=serializer.data,
+            data=serializer.data,
         )
         return Response(payload, status=status.HTTP_200_OK)
 
