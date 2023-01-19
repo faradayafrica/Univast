@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", 'univast.faraday.africa').split(" ")
 
@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     
     # third party packages
     'rest_framework',
-    'rest_framework_swagger',
+    'drf_yasg',
     "rest_framework_api_key",
     "corsheaders",
 ]
@@ -79,7 +79,7 @@ CSRF_TRUSTED_ORIGINS=['https://univast.faraday.africa', 'https://univast.azurewe
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if DEBUG == "True":
+if DEBUG:
 
     DATABASES = {
         'default': {
