@@ -16,6 +16,7 @@ class DegreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Degree
         fields = [
+            "id",
             "name",
         ]
         read_only_fields = fields
@@ -39,6 +40,7 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = [
+            "id",
             "name",
             "country_code",
         ]
@@ -59,6 +61,7 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = [
+            "id",
             "type",
             "name",
             "code",
@@ -95,6 +98,7 @@ class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
         fields = [
+            "id",
             "name",
         ]
 
@@ -111,4 +115,4 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Department
-        fields = ["name", "degree", "duration"]
+        fields = ["id", "name", "degree", "duration"]
