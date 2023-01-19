@@ -9,7 +9,6 @@ from django.db.models import QuerySet
 from rest_framework.request import Request
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework_api_key.permissions import HasAPIKey
 
 # Own imports
@@ -23,7 +22,7 @@ from academia.serializers import (
 from academia.selectors import get_country, get_school, get_faculty
 
 # Third Party Imports
-from rest_api_payload import success_response, error_response
+from rest_api_payload import success_response
 
 
 # Home page
@@ -93,7 +92,7 @@ class SchoolListAPIView(generics.ListAPIView):
         This API view retrieves the list of schools.
 
         :param country_name: the name of country you wish to get the list of available schools in.
-        :type country_name: str
+        \n:type country_name: str
         """
         schools = self.get_queryset()
         serializer = self.serializer_class(
@@ -130,8 +129,8 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         """
         This API view retrieves the list of faculties in a school.
 
-        :param school_code: the name of school you wish to get the list of available faculties in.
-        :type school_code: str
+        :param school_code: the name of school you wish to get the list of available faculties in.\n
+        \n:type school_code: str\n
         """
         schools = self.get_queryset(school_code)
         serializer = self.serializer_class(
@@ -164,9 +163,9 @@ class DepartmentListAPIView(generics.ListAPIView):
         This API view retrieves the list of departments in a school.
 
         :param school_code: the school (code) you wish to get the list of available departments in.
-        :type school_code: str
-        :param faculty_name: the name of faculty you wish to get the list of available departments in.
-        :type faculty_name: str
+        \n:type school_code: str\n
+        \n:param faculty_name: the name of faculty you wish to get the list of available departments in.
+        \n:type faculty_name: str\n
         """
         schools = self.get_queryset(school_code, faculty_name)
         serializer = self.serializer_class(
