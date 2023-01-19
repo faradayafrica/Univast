@@ -2,7 +2,8 @@
 from django.shortcuts import render
 
 # Rest Framework Imports
-from rest_framework import status
+from rest_framework.request import Request
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_api_key.permissions import HasAPIKey
@@ -15,7 +16,10 @@ from academia.serializers import (
     FacultySerializer,
     DepartmentSerializer,
 )
-from academia.utills import SuccessResponse, ErrorResponse
+
+# Third Party Imports
+from rest_api_payload import success_response, error_response
+
 
 # Home page
 def home(request):
@@ -50,14 +54,14 @@ def CountryList(request):
         countries = Country.objects.all()
         serializer = CountrySerializer(countries, many=True)
 
-        payload = SuccessResponse(
+        payload = success_response(
             "Success", "Retrieved all countries", serializer
         )
         return Response(data=payload, status=status.HTTP_200_OK)
 
     except Exception as e:
 
-        payload = ErrorResponse("Error", {"details": f"{e}"})
+        payload = error_response("Error", {"details": f"{e}"})
         return Response(
             data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
@@ -81,7 +85,7 @@ def SchoolList(request):
     # return an error with error messages for failed validations
     if len(messages["errors"]) > 0:
 
-        payload = ErrorResponse("Error", {"detail": messages["errors"]})
+        payload = error_response("Error", {"detail": messages["errors"]})
         return Response(data=payload, status=status.HTTP_400_BAD_REQUEST)
 
     else:
@@ -96,7 +100,7 @@ def SchoolList(request):
                 schools, many=True, context={"request": request}
             )
 
-            payload = SuccessResponse(
+            payload = success_response(
                 "Success",
                 f"Retrieved all schools in {country_name}",
                 serializer,
@@ -104,7 +108,7 @@ def SchoolList(request):
             return Response(data=payload, status=status.HTTP_200_OK)
 
         except Exception as e:
-            payload = ErrorResponse("Error", {"details": f"{e}"})
+            payload = error_response("Error", {"details": f"{e}"})
         return Response(
             data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
@@ -127,7 +131,7 @@ def FacultyList(request):
     # return an error with error messages for failed validations
     if len(messages["errors"]) > 0:
 
-        payload = ErrorResponse("Error", {"detail": messages["errors"]})
+        payload = error_response("Error", {"detail": messages["errors"]})
         return Response(data=payload, status=status.HTTP_400_BAD_REQUEST)
 
     else:
@@ -140,7 +144,7 @@ def FacultyList(request):
 
             serializer = FacultySerializer(faculties, many=True)
 
-            payload = SuccessResponse(
+            payload = success_response(
                 "Success",
                 f"Retrieved all schools in {school_name}",
                 serializer,
@@ -148,7 +152,7 @@ def FacultyList(request):
             return Response(data=payload, status=status.HTTP_200_OK)
 
         except Exception as e:
-            payload = ErrorResponse("Error", {"details": f"{e}"})
+            payload = error_response("Error", {"details": f"{e}"})
         return Response(
             data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
@@ -175,7 +179,7 @@ def DepartmentList(request):
     # return an error with error messages for failed validations
     if len(messages["errors"]) > 0:
 
-        payload = ErrorResponse("Error", {"detail": messages["errors"]})
+        payload = error_response("Error", {"detail": messages["errors"]})
         return Response(data=payload, status=status.HTTP_400_BAD_REQUEST)
 
     else:
@@ -191,7 +195,7 @@ def DepartmentList(request):
 
             serializer = DepartmentSerializer(departments, many=True)
 
-            payload = SuccessResponse(
+            payload = success_response(
                 "Success",
                 f"Retrieved all schools in {faculty_name} at {school_name}",
                 serializer,
@@ -199,7 +203,7 @@ def DepartmentList(request):
             return Response(data=payload, status=status.HTTP_200_OK)
 
         except Exception as e:
-            payload = ErrorResponse("Error", {"details": f"{e}"})
+            payload = error_response("Error", {"details": f"{e}"})
         return Response(
             data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
