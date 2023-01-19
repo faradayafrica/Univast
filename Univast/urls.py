@@ -14,7 +14,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Univast API",
         default_version="1.0",
-        description="An Open Source RESTful Microservice to index all Tertiary Institutions globally.",
+        description= "An Open Source RESTful Microservice to index all Tertiary Institutions globally. To get started, request for an API Key by contacting us.",
         contact=openapi.Contact(email="engineering@faraday.africa"),
     ),
     public=True,
