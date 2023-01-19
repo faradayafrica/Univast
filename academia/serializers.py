@@ -111,8 +111,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
     :return: Serilized data specified by provided fields
     """
 
-    degrees = DegreeSerializer(many=True, read_only=True)
+    degree = DegreeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Department
-        fields = ["id", "name", "degrees", "duration"]
+        fields = ["id", "name", "degree", "duration"]
