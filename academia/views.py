@@ -1,5 +1,9 @@
+# Stdlib Imports
+from typing import List
+
 # Django imports
 from django.shortcuts import render
+from django.db.models import QuerySet
 
 # Rest Framework Imports
 from rest_framework.request import Request
@@ -16,6 +20,7 @@ from academia.serializers import (
     FacultySerializer,
     DepartmentSerializer,
 )
+from academia.selectors import get_country
 
 # Third Party Imports
 from rest_api_payload import success_response, error_response
@@ -49,7 +54,7 @@ def custom_bad_request_view(request, exception=None):
 class CountryListAPIView(generics.ListAPIView):
     serializer_class = CountrySerializer
     permission_classes = (HasAPIKey,)
-    queryset = Country.objects.only("name", "country_code")
+    queryset = Country.objects.only("id", "name", "country_code")
 
     def get(self, request: Request) -> Response:
         """
@@ -67,51 +72,53 @@ class CountryListAPIView(generics.ListAPIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-# Fetch Schools in a Country
-@api_view(["GET"])
-@permission_classes((HasAPIKey,))
-def SchoolList(request):
+class SchoolListAPIView(generics.ListAPIView):
+    serializer_class = SchoolSerializer
+    permission_classes = (HasAPIKey,)
+    queryset = School.objects.only(
+        "id",
+        "type",
+        "name",
+        "code",
+        "website",
+        "logo",
+        "ownership",
+        "owned_by",
+        "founded",
+        "address",
+    )
 
-    # initialize empty array to hold error message(s)
-    messages = {"errors": []}
+    def get(self, request: Request) -> Response:
+        """
+        This API view retrieves the list of schools.
 
-    # get required parameters
-    country_name = request.data.get("country")
-
-    # perform validations for required parameters
-    if not country_name or country_name == "":
-        messages["errors"].append("Please provide the country name")
-
-    # return an error with error messages for failed validations
-    if len(messages["errors"]) > 0:
-
-        payload = error_response("Error", {"detail": messages["errors"]})
-        return Response(data=payload, status=status.HTTP_400_BAD_REQUEST)
-
-    else:
-
-        try:
-
-            country = Country.objects.get(name=country_name)
-
-            schools = School.objects.filter(country=country)
-
-            serializer = SchoolSerializer(
-                schools, many=True, context={"request": request}
-            )
-
-            payload = success_response(
-                "Success",
-                f"Retrieved all schools in {country_name}",
-                serializer,
-            )
-            return Response(data=payload, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            payload = error_response("Error", {"details": f"{e}"})
-        return Response(
-            data=payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        :param country_name: the name of country you wish to get the list of available schools in
+        :type country_name: str
+        """
+        schools = self.get_queryset()
+        serializer = self.serializer_class(
+            schools, many=True, context={"request": request}
         )
+
+        response = success_response(
+            status=True,
+            message=f"Retrieved all schools!",
+            data=serializer.data,
+        )
+        return Response(data=response, status=status.HTTP_200_OK)
+
+    def get_queryset(self) -> List[QuerySet]:
+        # get query param from request
+        qry_param = self.request.query_params
+
+        # return queryset if query param is None
+        # otherwise return queryset filtered by
+        # the country name
+        if not qry_param:
+            return self.queryset.all()
+
+        country = get_country(qry_param.get("country_name"))
+        return self.queryset.filter(country__name=country)
 
 
 # Fetch all Faculties in a School
