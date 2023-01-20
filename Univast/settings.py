@@ -78,14 +78,7 @@ WSGI_APPLICATION = "Univast.wsgi.application"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://\w+\.faraday\.africa$",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://univast.faraday.africa",
-    "https://univast.azurewebsites.net",
-]
+CORS_ALLOW_ALL_ORIGINS: True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
