@@ -78,7 +78,7 @@ class School(models.Model):
         - owned_by (str): if it is public, is it owned by federal, or state?
         - website (url): the official website of this institution
         - logo (url): the official logo of this insitution
-        - country (m2m): foreign key relationship to the acamedia_country_schools table
+        - country (fk): foreign key relationship to the acamedia_country_schools table
         - faculties (m2m): many to many relationship to the acamedia_faculty table
         - departments (m2m): many to many relationship to the academia_department table
     """
