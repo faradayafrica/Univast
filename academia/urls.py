@@ -15,7 +15,7 @@ app_name = "academia"
 urlpatterns = [
     path("", views.home, name="homepage"),
     path("countries", CountryListAPIView.as_view(), name="get_countries"),
-    path("schools", SchoolListAPIView.as_view(), name="get_schools"),
+    path("schools/<str:country_code>", SchoolListAPIView.as_view(), name="get_schools"),
     path(
         "faculties/<str:school_code>",
         SchoolFacultyListAPIView.as_view(),

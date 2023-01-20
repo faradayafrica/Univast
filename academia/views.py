@@ -63,12 +63,12 @@ class CountryListAPIView(generics.ListAPIView):
         countries = self.get_queryset()
         serializer = self.serializer_class(countries, many=True)
 
-        payload = success_response(
+        response = success_response(
             status=True,
             message="Retrieved all countries!",
             data=serializer.data,
         )
-        return Response(payload, status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class SchoolListAPIView(generics.ListAPIView):
@@ -80,21 +80,20 @@ class SchoolListAPIView(generics.ListAPIView):
         "name",
         "code",
         "website",
-        "logo",
         "ownership",
         "owned_by",
         "founded",
         "address",
     )
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: Request, country_code: str) -> Response:
         """
         This API view retrieves the list of schools.
 
-        :param country_name: the name of country you wish to get the list of available schools in.
-        \n:type country_name: str
+        :param country_code: the code of country you wish to get the list of available schools in.
+        \n:type country_code: str
         """
-        schools = self.get_queryset()
+        schools = self.get_queryset(country_code)
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
@@ -106,18 +105,9 @@ class SchoolListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self) -> List[QuerySet]:
-        # get query param from request
-        qry_param = self.request.query_params
-
-        # return queryset if query param is None
-        # otherwise return queryset filtered by
-        # the country name
-        if not qry_param:
-            return self.queryset.all()
-
-        country = get_country(qry_param.get("country_name"))
-        return self.queryset.filter(country__name=country)
+    def get_queryset(self, code: str) -> QuerySet[School]:
+        country_code = get_country(code)
+        return self.queryset.filter(country__country_code=country_code)
 
 
 class SchoolFacultyListAPIView(generics.ListAPIView):
@@ -144,7 +134,7 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str) -> List[QuerySet]:
+    def get_queryset(self, code: str) -> QuerySet[Faculty]:
         school_code = get_school(code)
         return self.queryset.filter(school__code=school_code)
 
@@ -179,7 +169,7 @@ class DepartmentListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str, faculty: str) -> List[QuerySet]:
+    def get_queryset(self, code: str, faculty: str) -> QuerySet[Department]:
         school_code = get_school(code)
         faculty_name = get_faculty(faculty)
         return self.queryset.filter(

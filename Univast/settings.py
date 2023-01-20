@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,8 +11,8 @@ SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", "univast.faraday.africa").split(
-    " "
+ALLOWED_HOSTS = config(
+    "DJANGO_ALLOWED_HOSTS", "univast.faraday.africa", cast=Csv()
 )
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = "Univast.wsgi.application"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-CORS_ALLOW_ALL_ORIGINS: True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
