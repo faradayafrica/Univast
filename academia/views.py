@@ -63,12 +63,12 @@ class CountryListAPIView(generics.ListAPIView):
         countries = self.get_queryset()
         serializer = self.serializer_class(countries, many=True)
 
-        payload = success_response(
+        response = success_response(
             status=True,
             message="Retrieved all countries!",
             data=serializer.data,
         )
-        return Response(payload, status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class SchoolListAPIView(generics.ListAPIView):
