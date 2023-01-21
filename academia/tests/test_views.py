@@ -13,7 +13,7 @@ from rest_framework.test import APIClient, APITestCase
 from rest_framework_api_key.models import APIKey
 
 # Own Imports
-from academia.models import Country, School, Faculty, Department
+from academia.models import Country, School, Faculty, Department, Degree
 
 
 class BaseTestCase(object):
@@ -84,6 +84,35 @@ class BaseTestCase(object):
                 Faculty(school=alx_africa, name="Frontend Engineering"),
                 Faculty(school=alx_africa, name="Backend Engineering"),
                 Faculty(school=alx_africa, name="Product Management"),
+            ]
+        )
+
+    @classmethod
+    def create_departments(cls):
+        """This method is responsible for creating departments in a school faculty."""
+
+        alx_africa = cls.create_schools()[1]
+        fnt_eng = cls.create_faculties()[0]
+        bck_eng = cls.create_faculties()[1]
+
+        return Department.objects.bulk_create(
+            [
+                Department(
+                    school=alx_africa,
+                    faculty=fnt_eng,
+                    name="JavaScript + React + TypeScript",
+                    degree=Degree.objects.create(
+                        name="National Diploma", code="ND"
+                    ),
+                ),
+                Department(
+                    school=alx_africa,
+                    faculty=bck_eng,
+                    name="Python + Django + PostgreSQL",
+                    degree=Degree.objects.create(
+                        name="National Diploma", code="ND"
+                    ),
+                ),
             ]
         )
 
