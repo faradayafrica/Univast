@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(" ")])
 
@@ -77,6 +77,11 @@ WSGI_APPLICATION = "Univast.wsgi.application"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://univast.faraday.africa",
+    "https://univast.azurewebsites.net",
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
