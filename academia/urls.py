@@ -24,6 +24,6 @@ urlpatterns = [
     path(
         "departments/<str:school_code>/<str:faculty_name>",
         DepartmentListAPIView.as_view(),
-        name="get_departements",
+        name="get_departments",
     ),
 ]

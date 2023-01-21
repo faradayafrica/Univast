@@ -82,7 +82,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 if DEBUG:
-
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -90,8 +89,19 @@ if DEBUG:
         }
     }
 
-else:
+elif os.environ.get("GITHUB_WORKFLOW"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "univast_db",
+            "USER": "postgres",
+            "PASSWORD": "postgres",
+            "HOST": "localhost",
+            "PORT": 5432,
+        },
+    }
 
+else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -105,7 +115,8 @@ else:
     }
 
 REST_FRAMEWORK = {
-    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (),
 }
 
 # Password validation
