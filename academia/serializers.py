@@ -80,7 +80,7 @@ class SchoolSerializer(serializers.ModelSerializer):
         logo = (
             request.scheme
             + "://"
-            + request.META["HTTP_HOST"]
+            + request.get_host()
             + "/images/"
             + str(obj.logo)
         )
