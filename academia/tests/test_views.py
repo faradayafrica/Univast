@@ -75,6 +75,19 @@ class BaseTestCase(object):
         )
 
     @classmethod
+    def create_faculty(cls):
+        """This method is responsible for creating school faculties fixtures."""
+
+        alx_africa = cls.create_schools()[1]
+        return Faculty.objects.bulk_create(
+            [
+                Faculty(school=alx_africa, name="Frontend Engineering"),
+                Faculty(school=alx_africa, name="Backend Engineering"),
+                Faculty(school=alx_africa, name="Product Management"),
+            ]
+        )
+
+    @classmethod
     def create_user(cls) -> User:
         """
         This method is responsible for creating a test user.
@@ -148,3 +161,10 @@ class SchoolListAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], True)
         self.assertEqual(len(response.data["data"]), 2)
+
+
+class SchoolFacultyAPITestCase(APITestCase):
+    def setUp(self) -> None:
+        """Setup fixtures for school faculties api test case."""
+
+        self.client = APIClient()
