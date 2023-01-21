@@ -3,18 +3,24 @@ from random import randint
 
 # Django Imports
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 # Rest Framework Imports
 from rest_framework.test import APIClient, APITestCase
+
+# Third Party Imports
+from rest_framework_api_key.models import APIKey
 
 # Own Imports
 from academia.models import Country, School, Faculty, Department
 
 
-class BaseTestCase(APITestCase):
+class BaseTestCase(object):
     """Base test case to setup fixtures."""
 
-    def create_countries(self):
+    @classmethod
+    def create_countries(cls):
         """This method is responsible for creating countries fixtures."""
 
         return Country.objects.bulk_create(
@@ -40,7 +46,8 @@ class BaseTestCase(APITestCase):
             ]
         )
 
-    def create_schools(self):
+    @classmethod
+    def create_schools(cls):
         """This method is responsible for creating schools fixtures."""
 
         return School.objects.bulk_create(
@@ -66,4 +73,23 @@ class BaseTestCase(APITestCase):
             ]
         )
 
-    
+    @classmethod
+    def create_user(cls) -> User:
+        """This method is responsible for creating a test user."""
+
+        return User.objects.get_or_create(
+            first_name="Test",
+            last_name="User",
+            email="testuser@email.com",
+            username="testuser",
+            password=make_password("testuser__#%D^#GVD^@#G"),
+        )[0]
+
+    @classmethod
+    def get_user_apikey(cls) -> str:
+        user_apikey = APIKey.objects.get_or_create(
+            name="Test",
+            expiry_date="2023-01-25 16:13:50",
+        )[0]
+        api_key = APIKey.objects.assign_key(user_apikey)
+        return f"Api-Key {api_key}"
