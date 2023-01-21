@@ -50,6 +50,7 @@ class BaseTestCase(object):
     def create_schools(cls):
         """This method is responsible for creating schools fixtures."""
 
+        country = cls.create_countries()[2]
         return School.objects.bulk_create(
             [
                 School(
@@ -58,6 +59,7 @@ class BaseTestCase(object):
                     name="Lagos Statue University",
                     code="LASU",
                     founded=1832,
+                    country=country,
                     ownership="Public",
                 ),
                 School(
@@ -66,6 +68,7 @@ class BaseTestCase(object):
                     name="ALX Africa",
                     code="ALX",
                     founded=2020,
+                    country=country,
                     ownership="Private",
                 ),
             ]
@@ -119,8 +122,29 @@ class CountryListAPITestCase(APITestCase):
             url, format="json", **BaseTestCase.get_user_apikey()
         )
 
-        print("Content: ", response.data)
-
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], True)
         self.assertEqual(len(response.data["data"]), 3)
+
+
+class SchoolListAPITestCase(APITestCase):
+    def setUp(self) -> None:
+        """Setup fixtures for school list api test case."""
+
+        self.country = BaseTestCase.create_countries()[2]
+        self.country.save()
+
+        self.schools = BaseTestCase.create_schools()
+        self.client = APIClient()
+
+    def test_get_list_of_schools(self):
+        """Ensure we get a list of schools."""
+
+        url = reverse("academia:get_schools", args=[self.country.country_code])
+        response = self.client.get(
+            url, format="json", **BaseTestCase.get_user_apikey()
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], True)
+        self.assertEqual(len(response.data["data"]), 2)
