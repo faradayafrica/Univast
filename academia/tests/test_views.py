@@ -53,7 +53,6 @@ class BaseTestCase(object):
         return School.objects.bulk_create(
             [
                 School(
-                    id=randint(0, 999),
                     listed=False,
                     type="Public",
                     name="Lagos Statue University",
@@ -62,7 +61,6 @@ class BaseTestCase(object):
                     ownership="Public",
                 ),
                 School(
-                    id=randint(0, 999),
                     listed=False,
                     type="Private",
                     name="ALX Africa",
@@ -75,7 +73,12 @@ class BaseTestCase(object):
 
     @classmethod
     def create_user(cls) -> User:
-        """This method is responsible for creating a test user."""
+        """
+        This method is responsible for creating a test user.
+
+        :param cls: The class of the test case
+        :return: The user that was created.
+        """
 
         return User.objects.get_or_create(
             first_name="Test",
@@ -87,12 +90,18 @@ class BaseTestCase(object):
 
     @classmethod
     def get_user_apikey(cls) -> str:
-        user_apikey = APIKey.objects.get_or_create(
-            name="Test",
-            expiry_date="2023-01-25 16:13:50",
-        )[0]
-        api_key = APIKey.objects.assign_key(user_apikey)
-        return f"Api-Key {api_key}"
+        """
+        This method is responsible for creating an API key.
+
+        :param cls: The class of the test case
+        :return: The headers are being returned.
+        """
+
+        _, api_key = APIKey.objects.create_key(
+            name="Test", expiry_date="2023-01-30 2:00:00"
+        )
+        headers = {"HTTP_AUTHORIZATION": f"Api-Key {api_key}"}
+        return headers
 
 
 class CountryListAPITestCase(APITestCase):
@@ -106,15 +115,12 @@ class CountryListAPITestCase(APITestCase):
         """Ensure we get a list of countries."""
 
         url = reverse("academia:get_countries")
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION=BaseTestCase.get_user_apikey()
+        response = self.client.get(
+            url, format="json", **BaseTestCase.get_user_apikey()
         )
-        response = self.client.get(url, format="json")
 
-        print("ApiKey: ", BaseTestCase.get_user_apikey())
-        print("Response: ", response.data)
+        print("Content: ", response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], True)
-        self.assertEqual(len(response.data["data"]), 2)
+        self.assertEqual(len(response.data["data"]), 3)
