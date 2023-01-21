@@ -108,24 +108,7 @@ class BaseTestCase(object):
                 ),
             ]
         )
-
-    @classmethod
-    def create_user(cls) -> User:
-        """
-        This method is responsible for creating a test user.
-
-        :param cls: The class of the test case
-        :return: The user that was created.
-        """
-
-        return User.objects.get_or_create(
-            first_name="Test",
-            last_name="User",
-            email="testuser@email.com",
-            username="testuser",
-            password=make_password("testuser__#%D^#GVD^@#G"),
-        )[0]
-
+        
     @classmethod
     def get_user_apikey(cls) -> str:
         """
