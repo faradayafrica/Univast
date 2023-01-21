@@ -92,26 +92,19 @@ class BaseTestCase(object):
         """This method is responsible for creating departments in a school faculty."""
 
         alx_africa = cls.create_schools()[1]
-        fnt_eng = cls.create_faculties()[0]
         bck_eng = cls.create_faculties()[1]
 
         return Department.objects.bulk_create(
             [
                 Department(
                     school=alx_africa,
-                    faculty=fnt_eng,
-                    name="JavaScript + React + TypeScript",
-                    degree=Degree.objects.create(
-                        name="National Diploma", code="ND"
-                    ),
+                    faculty=bck_eng,
+                    name="JavaScript/TypeScript + NodeJS + MongoDB",
                 ),
                 Department(
                     school=alx_africa,
                     faculty=bck_eng,
                     name="Python + Django + PostgreSQL",
-                    degree=Degree.objects.create(
-                        name="National Diploma", code="ND"
-                    ),
                 ),
             ]
         )
@@ -213,3 +206,37 @@ class SchoolFacultyAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], True)
         self.assertEqual(len(response.data["data"]), 3)
+
+
+class DepartmentListAPITestCase(APITestCase):
+    def setUp(self) -> None:
+        """Setup fixtures for department lst api test case."""
+
+        self.nd = Degree.objects.create(name="National Diploma", code="ND")
+
+        self.school = BaseTestCase.create_schools()[1]
+        self.school.save()
+
+        self.bck_eng = BaseTestCase.create_faculties()[1]
+        self.bck_eng.save()
+
+        self.departments = BaseTestCase.create_departments()
+        self.departments[0].degree.add(self.nd)
+        self.departments[1].degree.add(self.nd)
+
+        self.client = APIClient()
+
+    def test_get_list_of_departments(self):
+        """Ensure we get a list of departments."""
+
+        url = reverse(
+            "academia:get_departments",
+            args=[self.school.code, self.bck_eng.name],
+        )
+        response = self.client.get(
+            url, format="json", **BaseTestCase.get_user_apikey()
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], True)
+        self.assertEqual(len(response.data["data"]), 2)
