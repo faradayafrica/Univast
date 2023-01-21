@@ -8,6 +8,6 @@ Pillow==9.3.0
 pytz==2022.2.1
 python-decouple==3.5
 psycopg2-binary==2.9.2
-rest-api-payload==0.0.6
+rest-api-payload==0.0.7
 sqlparse==0.4.3
 whitenoise==6.2.0
