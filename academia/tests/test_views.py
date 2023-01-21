@@ -75,7 +75,7 @@ class BaseTestCase(object):
         )
 
     @classmethod
-    def create_faculty(cls):
+    def create_faculties(cls):
         """This method is responsible for creating school faculties fixtures."""
 
         alx_africa = cls.create_schools()[1]
@@ -167,4 +167,20 @@ class SchoolFacultyAPITestCase(APITestCase):
     def setUp(self) -> None:
         """Setup fixtures for school faculties api test case."""
 
+        self.school = BaseTestCase.create_schools()[1]
+        self.school.save()
+
+        self.faculties = BaseTestCase.create_faculties()
         self.client = APIClient()
+
+    def test_get_list_of_school_faculties(self):
+        """Ensure we get a list of school faculties."""
+
+        url = reverse("academia:get_faculties", args=[self.school.code])
+        response = self.client.get(
+            url, format="json", **BaseTestCase.get_user_apikey()
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], True)
+        self.assertEqual(len(response.data["data"]), 3)
