@@ -93,3 +93,28 @@ class BaseTestCase(object):
         )[0]
         api_key = APIKey.objects.assign_key(user_apikey)
         return f"Api-Key {api_key}"
+
+
+class CountryListAPITestCase(APITestCase):
+    def setUp(self) -> None:
+        """Setup fixtures for country list api test case."""
+
+        self.countries = BaseTestCase.create_countries()
+        self.client = APIClient()
+
+    def test_get_list_of_countries(self):
+        """Ensure we get a list of countries."""
+
+        url = reverse("academia:get_countries")
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=BaseTestCase.get_user_apikey()
+        )
+        response = self.client.get(url, format="json")
+
+        print("ApiKey: ", BaseTestCase.get_user_apikey())
+        print("Response: ", response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["status"], True)
+        self.assertEqual(len(response.data["data"]), 2)
