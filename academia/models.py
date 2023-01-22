@@ -53,6 +53,7 @@ class Country(models.Model):
         "School",
         blank=True,
         related_name="country_schools",
+        editable=False
     )
 
     class Meta:
