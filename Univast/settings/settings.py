@@ -4,7 +4,7 @@ from decouple import config, Csv
 from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = get_random_secret_key()
 
@@ -82,42 +82,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://univast.faraday.africa",
     "https://univast.azurewebsites.net",
 ]
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
-elif os.environ.get("GITHUB_WORKFLOW"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "univast_db",
-            "USER": "postgres",
-            "PASSWORD": "postgres",
-            "HOST": "localhost",
-            "PORT": 5432,
-        },
-    }
-
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": config("UNIVAST_DB_NAME"),
-            "USER": config("UNIVAST_DB_USER"),
-            "PASSWORD": config("UNIVAST_DB_PASSWORD"),
-            "HOST": config("UNIVAST_DB_HOST"),
-            "PORT": config("UNIVAST_DB_PORT"),
-            "OPTIONS": {"sslmode": "require"},
-        },
-    }
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
