@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+
+    # Django Web container
+    web:
+        container_name: "Univast_web"
+        restart: always
+        build: .
+        command: sh -c "python manage.py makemigrations && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:9000"
+        volumes:
+            - .:/univast
+        ports:
+            - 9000:9000
+        env_file:
+          - ./.env
+        # depends_on:
+        #   - db
+
+    # Postgres Database container
+#     db:
+#       container_name: "Univast_postgres"
+#       image: 'postgres:13.0-alpine'
+#       volumes:
+#         - postgres_data:/var/lib/postgresql/data/
+#       environment:
+#         - POSTGRES_USER=${UNIVAST_DB_USER}
+#         - POSTGRES_PASSWORD=${UNIVAST_DB_PASSWORD}
+#         - POSTGRES_DB=${UNIVAST_DB_NAME}
+
+# volumes:
+#   postgres_data:
