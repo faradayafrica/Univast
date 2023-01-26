@@ -11,6 +11,7 @@ env:
   UNIVAST_DB_PASSWORD: "value"
   UNIVAST_DB_HOST: "value"
   UNIVAST_DB_PORT: "value"
+  DJANGO_DEVELOPMENT: "dev"
 
 jobs:
   build:
