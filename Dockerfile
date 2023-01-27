@@ -38,8 +38,7 @@ RUN pip install -r /requirements.txt
 RUN apk del .tmp
 
 # Expose port 80
-ENV PORT 80
-EXPOSE 80
+EXPOSE 8080
 
 # copy project
 COPY . .
