@@ -10,10 +10,10 @@ services:
         command: sh -c "python manage.py runserver"
         volumes:
             - .:/univast
-        # ports:
-        #     - 9000:80
-        expose:
-            - "80"
+        ports:
+            - 9000:9000
+        # expose:
+        #     - "80"
         env_file:
           - ./.env
         # depends_on:
