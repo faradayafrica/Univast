@@ -1,4 +1,5 @@
 # Docker
+
 # Build and push an image to Azure Container Registry
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
@@ -37,3 +38,21 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+
+    - task: DockerCompose@0
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: 'Microsoft Azure Sponsorship(1)(a6491082-f9b3-4932-b499-f038d4d4f280)'
+        azureContainerRegistry: '{"loginServer":"univast.azurecr.io", "id" : "/subscriptions/a6491082-f9b3-4932-b499-f038d4d4f280/resourceGroups/Faraday_App/providers/Microsoft.ContainerRegistry/registries/univast"}'
+        dockerComposeFile: '**/docker-compose.yml'
+        dockerComposeFileArgs: |
+          DJANGO_ALLOWED_HOSTS=univast.faraday.africa univast.azurewebsites.net
+          DJANGO_DEVELOPMENT=prod
+          
+          UNIVAST_DB_NAME=postgres
+          UNIVAST_DB_USER=faradayadmin
+          UNIVAST_DB_PASSWORD=4nK&3&CUH*7mM9
+          UNIVAST_DB_HOST=univast.postgres.database.azure.com
+          UNIVAST_DB_PORT=5432
+        action: 'Run a Docker Compose command'
+        dockerComposeCommand: 'docker-compose up --build'
