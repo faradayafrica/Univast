@@ -1,14 +1,18 @@
 # pull official base image
 FROM python:3.9.6-alpine
 
+EXPOSE 8000
+
 # create wrk directory
 RUN mkdir /univast
 
 # set work directory
 WORKDIR /univast
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
@@ -37,8 +41,8 @@ RUN pip install -r /requirements.txt
 # delete something I can't remember but don't delete.
 RUN apk del .tmp
 
-# Expose port 80
-EXPOSE 80 8080 8000
-
 # copy project
 COPY . .
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["sh", "-c", "0.0.0.0:8000", "Univast.wsgi"]
