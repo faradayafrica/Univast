@@ -37,5 +37,9 @@ RUN pip install -r /requirements.txt
 # delete something I can't remember but don't delete.
 RUN apk del .tmp
 
+# Expose port 80
+ENV PORT 80
+EXPOSE 80
+
 # copy project
 COPY . .
