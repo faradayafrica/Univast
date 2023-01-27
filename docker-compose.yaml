@@ -7,11 +7,11 @@ services:
         container_name: "Univast_web"
         restart: always
         build: .
-        command: sh -c "python manage.py makemigrations && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+        command: sh -c "python manage.py runserver"
         volumes:
             - .:/univast
-        ports:
-            - 8000:8000
+        # ports:
+        #     - 80:80
         env_file:
           - ./.env
         # depends_on:
