@@ -7,7 +7,7 @@ services:
         container_name: "Univast_web"
         restart: always
         build: .
-        command: sh -c "python manage.py runserver"
+        command: sh -c "python manage.py runserver 80"
         volumes:
             - .:/univast
         # ports:
