@@ -13,7 +13,7 @@ services:
         # ports:
         #     - 9000:80
         expose:
-            - "8080"
+            - "80"
         env_file:
           - ./.env
         # depends_on:
