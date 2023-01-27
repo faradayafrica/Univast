@@ -43,6 +43,3 @@ RUN apk del .tmp
 
 # copy project
 COPY . .
-
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["sh", "-c", "0.0.0.0:8000", "Univast.wsgi"]
