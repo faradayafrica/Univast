@@ -66,9 +66,14 @@ elif os.environ.get("GITHUB_WORKFLOW"):
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": config("UNIVAST_DB_NAME"),
+            "USER": config("UNIVAST_DB_USER"),
+            "PASSWORD": config("UNIVAST_DB_PASSWORD"),
+            "HOST": config("UNIVAST_DB_HOST"),
+            "PORT": config("UNIVAST_DB_PORT"),
+            "OPTIONS": {"sslmode": "require"},
+        },
     }
 
 
