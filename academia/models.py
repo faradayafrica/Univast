@@ -47,7 +47,7 @@ class Country(models.Model):
         max_length=50,
         null=False,
         blank=True,
-        help_text="The country name code, e.g NG.",
+        help_text="The country name code in uppercase only, e.g NG.",
     )
     schools = models.ManyToManyField(
         "School",
