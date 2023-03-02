@@ -9,19 +9,19 @@ from .models import (
 
 class AdminCountry(admin.ModelAdmin):
     list_display = ('country_code', 'name', 'continent',)
-    search_fields = ('continent', 'country_code', 'name')
+    search_fields = ('continent__icontains', 'country_code__icontains', 'name__icontains')
     list_filter = ('continent',)
     empty_value_display = '-empty field-'
 
 class AdminSchool(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'owned_by', 'listed',) 
-    search_fields = ('name', 'country',)
+    search_fields = ('name__icontains', 'country__name__icontains', 'code__icontains', 'type__icontains', 'owned_by__icontains', 'country__country_code__icontains', 'country__continent__icontains',)
     list_filter = ('country', 'type', 'owned_by', 'listed')
     empty_value_display = '-empty field-'
 
 class AdminFaculty(admin.ModelAdmin):
     list_display = ('name', 'school')
-    search_fields = ('continent', 'country_code', 'name')
+    search_fields = ['name__icontains', 'school__name__icontains']
     list_filter = ('school',)
     empty_value_display = '-empty field-'
     autocomplete_fields = ['school']
@@ -31,7 +31,7 @@ class AdminDepartment(admin.ModelAdmin):
     search_fields = ('name', 'degree', 'duration')
     list_filter = ('degree', 'faculty', 'duration')
     empty_value_display = '-empty field-'
-    autocomplete_fields = ['faculty', 'school']
+    autocomplete_fields = ['school', 'faculty', 'degree']
 
 class AdminDegree(admin.ModelAdmin):
     list_display = ('name', 'code')
