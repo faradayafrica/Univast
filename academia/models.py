@@ -279,9 +279,11 @@ class Department(models.Model):
         blank=True,
         help_text="The name of the department",
     )
-    degree = models.ManyToManyField(
+    degree = models.ForeignKey(
         "Degree",
         blank=False,
+        default='',
+        on_delete=models.CASCADE,
         help_text="The type of degree offered by this department.",
     )
     duration = models.CharField(
