@@ -17,7 +17,7 @@ def get_school(code: str) -> str:
     :return: The school code.
     """
 
-    if not School.objects.filter(code=code.lower()).exists():
+    if not School.objects.filter(code=code).exists():
         raise exceptions.NotFound({"message": "School not found!"})
     return code
 
