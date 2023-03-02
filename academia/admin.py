@@ -24,12 +24,14 @@ class AdminFaculty(admin.ModelAdmin):
     search_fields = ('continent', 'country_code', 'name')
     list_filter = ('school',)
     empty_value_display = '-empty field-'
+    autocomplete_fields = ['school']
     
 class AdminDepartment(admin.ModelAdmin):
     list_display = ('faculty', 'name', 'duration')
     search_fields = ('name', 'degree', 'duration')
     list_filter = ('degree', 'faculty', 'duration')
     empty_value_display = '-empty field-'
+    autocomplete_fields = ['faculty', 'school']
 
 class AdminDegree(admin.ModelAdmin):
     list_display = ('name', 'code')
