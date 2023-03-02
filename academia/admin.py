@@ -28,14 +28,14 @@ class AdminFaculty(admin.ModelAdmin):
     
 class AdminDepartment(admin.ModelAdmin):
     list_display = ('faculty', 'name', 'duration')
-    search_fields = ('name', 'degree', 'duration')
+    search_fields = ('name__icontains', 'degree__name__icontains', 'degree__code__icontains', 'duration__icontains', 'faculty__name__icontains', 'school__name__icontains', 'school__country__name__icontains', 'school__country__country_code__icontains')
     list_filter = ('degree', 'faculty', 'duration')
     empty_value_display = '-empty field-'
     autocomplete_fields = ['school', 'faculty', 'degree']
 
 class AdminDegree(admin.ModelAdmin):
     list_display = ('name', 'code')
-    search_fields = ('name', 'code')
+    search_fields = ('name__icontains', 'code__icontains')
     list_filter = ('name', 'code')
     empty_value_display = '-empty field-'
 
