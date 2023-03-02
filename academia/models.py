@@ -185,7 +185,7 @@ class School(models.Model):
         verbose_name_plural = "Schools"
 
     def __str__(self) -> str:
-        return self.name
+        return self.name + " - " + self.country.name
 
 
 class Faculty(models.Model):
@@ -200,7 +200,7 @@ class Faculty(models.Model):
     """
 
     id = models.UUIDField(
-        default=uuid.uuid4, unique=True, primary_key=True, editable=False
+        default=uuid.uuid4, unique=True, primary_key=True, editable=False,
     )
     school = models.ForeignKey(
         School,
@@ -226,7 +226,7 @@ class Faculty(models.Model):
         verbose_name_plural = "Faculties"
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + " - " + str(self.school)
 
 
 class Department(models.Model):
@@ -304,7 +304,7 @@ class Department(models.Model):
         verbose_name_plural = "Departments"
 
     def __str__(self) -> str:
-        return self.name
+        return self.name + " - " + self.faculty.name + " - " + self.school.name
 
 
 class Degree(models.Model):
@@ -337,4 +337,4 @@ class Degree(models.Model):
         verbose_name_plural = "Degrees"
 
     def __str__(self) -> str:
-        return self.name
+        return self.name + " - " + self.code
