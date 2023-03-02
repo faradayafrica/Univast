@@ -17,7 +17,7 @@ def get_school(code: str) -> str:
     :return: The school code.
     """
 
-    if not School.objects.filter(code=code).exists():
+    if not School.objects.filter(code=code.lower()).exists():
         raise exceptions.NotFound({"message": "School not found!"})
     return code
 
@@ -27,13 +27,16 @@ def get_country(code: str) -> str:
     This function returns the country code if it exists,
     otherwise it raises a NotFound exception.
 
-    :param code: This is the name of the country we want
+    :param code: This is the code associated with the name of the country we want
     :type code: str
 
     :return: The country code.
     """
 
+    if code.lower():
+        code = code.upper()
     if not Country.objects.filter(country_code=code).exists():
+        print(code.lower())
         raise exceptions.NotFound({"message": "Country not found!"})
     return code
 
@@ -47,6 +50,6 @@ def get_faculty(name: str) -> str:
     :type name: str
     """
 
-    if not Faculty.objects.filter(name=name).exists():
+    if not Faculty.objects.filter(name__lower=name).exists():
         raise exceptions.NotFound({"message": "Faculty not found!"})
     return name
