@@ -14,20 +14,20 @@ class AdminCountry(admin.ModelAdmin):
     empty_value_display = '-empty field-'
 
 class AdminSchool(admin.ModelAdmin):
-    list_display = ('name', 'code', 'type', 'owned_by', 'listed',) 
+    list_display = ('name', 'country', 'code', 'type', 'owned_by', 'listed',) 
     search_fields = ('name__icontains', 'country__name__icontains', 'code__icontains', 'type__icontains', 'owned_by__icontains', 'country__country_code__icontains', 'country__continent__icontains',)
     list_filter = ('country', 'type', 'owned_by', 'listed')
     empty_value_display = '-empty field-'
 
 class AdminFaculty(admin.ModelAdmin):
-    list_display = ('name', 'school')
+    list_display = ('name', 'school',)
     search_fields = ['name__icontains', 'school__name__icontains']
     list_filter = ('school',)
     empty_value_display = '-empty field-'
     autocomplete_fields = ['school']
     
 class AdminDepartment(admin.ModelAdmin):
-    list_display = ('faculty', 'name', 'duration')
+    list_display = ('name', 'faculty', 'duration')
     search_fields = ('name__icontains', 'degree__name__icontains', 'degree__code__icontains', 'duration__icontains', 'faculty__name__icontains', 'school__name__icontains', 'school__country__name__icontains', 'school__country__country_code__icontains')
     list_filter = ('degree', 'faculty', 'duration')
     empty_value_display = '-empty field-'
