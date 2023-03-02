@@ -50,6 +50,6 @@ def get_faculty(name: str) -> str:
     :type name: str
     """
 
-    if not Faculty.objects.filter(name__lower=name).exists():
+    if not Faculty.objects.filter(name=name).exists():
         raise exceptions.NotFound({"message": "Faculty not found!"})
     return name
