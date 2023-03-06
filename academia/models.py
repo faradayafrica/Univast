@@ -323,7 +323,7 @@ class Department(models.Model):
 
     class Meta:
         verbose_name_plural = "Departments"
-        Index = [
+        indexes = [
             Index(fields=[
                 "id",
                 "name",
