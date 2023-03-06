@@ -107,7 +107,7 @@ class SchoolListAPIView(generics.ListAPIView):
 
     def get_queryset(self, code: str) -> QuerySet[School]:
         country_code = get_country(code)
-        return self.queryset.filter(country__country_code=country_code)
+        return self.queryset.filter(country__country_code=country_code).order_by('name')
 
 
 class SchoolFacultyListAPIView(generics.ListAPIView):
@@ -136,7 +136,7 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
 
     def get_queryset(self, code: str) -> QuerySet[Faculty]:
         school_code = get_school(code)
-        return self.queryset.filter(school__code=school_code)
+        return self.queryset.filter(school__code=school_code).order_by('name')
 
 
 class DepartmentListAPIView(generics.ListAPIView):
@@ -174,4 +174,4 @@ class DepartmentListAPIView(generics.ListAPIView):
         faculty_name = get_faculty(faculty)
         return self.queryset.filter(
             school__code=school_code, faculty__name=faculty_name
-        )
+        ).order_by('name')
