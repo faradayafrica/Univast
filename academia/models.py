@@ -3,6 +3,7 @@ import uuid
 
 # Django Imports
 from django.db import models
+from django.db.models import Index
 
 
 class Country(models.Model):
@@ -183,6 +184,20 @@ class School(models.Model):
 
     class Meta:
         verbose_name_plural = "Schools"
+        indexes = [
+            Index(fields=[
+                'name', 
+                'code',
+                'country',
+                'type',
+                'founded',
+                'ownership',
+                'owned_by',
+                'address',
+                'website',
+                'id'
+                ]),
+        ]
 
     def __str__(self) -> str:
         return self.name + " - " + self.country.name
@@ -221,9 +236,15 @@ class Faculty(models.Model):
         related_name="faculty_departments",
         editable=False,
     )
-
     class Meta:
         verbose_name_plural = "Faculties"
+        indexes = [
+            Index(fields=[
+                'school',
+                'name',
+                'id'
+                ]),
+        ]
 
     def __str__(self):
         return str(self.name) + " - " + str(self.school)
@@ -302,6 +323,13 @@ class Department(models.Model):
 
     class Meta:
         verbose_name_plural = "Departments"
+        Index = [
+            Index(fields=[
+                "id",
+                "name",
+                "degree",
+            ])
+        ]
 
     def __str__(self) -> str:
         return self.name + " - " + self.faculty.name + " - " + self.school.name
