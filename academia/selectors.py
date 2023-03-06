@@ -33,8 +33,6 @@ def get_country(code: str) -> str:
     :return: The country code.
     """
 
-    if code.lower():
-        code = code.upper()
     if not Country.objects.filter(country_code=code).exists():
         print(code.lower())
         raise exceptions.NotFound({"message": "Country not found!"})
