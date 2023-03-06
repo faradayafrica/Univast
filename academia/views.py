@@ -3,6 +3,7 @@ from typing import List
 
 # Django imports
 from django.shortcuts import render
+from django.core.cache import cache
 from django.db.models import QuerySet
 
 # Rest Framework Imports
@@ -93,14 +94,33 @@ class SchoolListAPIView(generics.ListAPIView):
         :param country_code: the code of country you wish to get the list of available schools in.
         \n:type country_code: str
         """
+        # Check if the data is already cached
+        key = f"schools_{country_code}"
+        data = cache.get(key)
+
+        if data is not None:
+            # If data is cached, return it
+            
+            response = success_response(
+                status=True,
+                message=f"Retrieved all schools from cache!",
+                data=data,
+            )
+                
+            return Response(data=response, status=status.HTTP_200_OK)
+
+        # If data is not cached, fetch it from the queryset
         schools = self.get_queryset(country_code)
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
 
+        # Cache the data for future requests
+        cache.set(key, serializer.data, timeout=None)
+
         response = success_response(
             status=True,
-            message=f"Retrieved all schools!",
+            message=f"Retrieved all schools from db!",
             data=serializer.data,
         )
         return Response(data=response, status=status.HTTP_200_OK)
