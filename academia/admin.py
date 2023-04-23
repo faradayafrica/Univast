@@ -14,9 +14,9 @@ class AdminCountry(admin.ModelAdmin):
     empty_value_display = '-empty field-'
 
 class AdminSchool(admin.ModelAdmin):
-    list_display = ('name', 'country', 'code', 'type', 'owned_by', 'listed',) 
+    list_display = ('name', 'country', 'code', 'type', 'owned_by', 'unlisted',) 
     search_fields = ('name__icontains', 'country__name__icontains', 'code__icontains', 'type__icontains', 'owned_by__icontains', 'country__country_code__icontains', 'country__continent__icontains',)
-    list_filter = ('country', 'type', 'owned_by', 'listed')
+    list_filter = ('country', 'type', 'owned_by', 'unlisted')
     empty_value_display = '-empty field-'
 
 class AdminFaculty(admin.ModelAdmin):

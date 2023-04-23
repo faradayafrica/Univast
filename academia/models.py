@@ -106,9 +106,9 @@ class School(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False
     )
-    listed = models.BooleanField(
+    unlisted = models.BooleanField(
         default=True,
-        help_text="Tick to indicate no longer valid and will not be returned in API calls.",
+        help_text="Tick to indicate no longer valid and this school will not be returned in API Response, untick to include in API Response",
     )
     type = models.CharField(
         max_length=20,

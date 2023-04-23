@@ -54,7 +54,7 @@ class BaseTestCase(object):
         return School.objects.bulk_create(
             [
                 School(
-                    listed=False,
+                    unlisted=False,
                     type="Public",
                     name="Lagos Statue University",
                     code="LASU",
@@ -63,7 +63,7 @@ class BaseTestCase(object):
                     ownership="Public",
                 ),
                 School(
-                    listed=False,
+                    unlisted=False,
                     type="Private",
                     name="ALX Africa",
                     code="ALX",
