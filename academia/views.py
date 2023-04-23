@@ -85,7 +85,7 @@ class SchoolListAPIView(generics.ListAPIView):
         "owned_by",
         "founded",
         "address",
-    )
+    ).filter(unlisted=False)
 
     def get(self, request: Request, country_code: str) -> Response:
         """
