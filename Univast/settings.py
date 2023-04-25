@@ -167,3 +167,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles/images")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AIRTABLE_API_KEY = config("AIRTABLE_API_KEY")
+AIRTABLE_BASEID = config("AIRTABLE_BASEID")
+AIRTABLE_TABLEID = config("AIRTABLE_TABLEID")
