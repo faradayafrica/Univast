@@ -24,10 +24,8 @@ schema_view = get_schema_view(
     generator_class=CustomSchemaGenerator,
 )
 
-from academia import views
-
 urlpatterns = [
-    path("", views.home, name="homepage"),
+    path("", include("web.urls")),
     path("academia/", include("academia.urls")),
     # Admin site
     path("api/auth/admin/", admin.site.urls),
