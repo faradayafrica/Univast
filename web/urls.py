@@ -13,6 +13,6 @@ app_name = "academia"
 
 urlpatterns = [
     path("", home, name="homepage"),
-    path("helpus", views.get_helpus, name="helpus"),
+    path("contribute", views.get_helpus, name="helpus"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
