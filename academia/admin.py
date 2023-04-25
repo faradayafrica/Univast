@@ -27,7 +27,7 @@ class AdminFaculty(admin.ModelAdmin):
     autocomplete_fields = ['school']
     
 class AdminDepartment(admin.ModelAdmin):
-    list_display = ('name', 'faculty', 'duration')
+    list_display = ('name', 'duration', 'school', 'faculty')
     search_fields = ('name__icontains', 'degree__name__icontains', 'degree__code__icontains', 'duration__icontains', 'faculty__name__icontains', 'school__name__icontains', 'school__country__name__icontains', 'school__country__country_code__icontains')
     list_filter = ('degree', 'faculty', 'duration')
     empty_value_display = '-empty field-'
