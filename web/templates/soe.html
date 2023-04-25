@@ -1,0 +1,357 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faraday</title>
+
+
+  <!-- SEO Meta Tags Start Here -->
+  <!-- Search Engine -->
+  <meta name="description"
+    content="Faraday is creating a safe space for university students to connect and learn online.">
+  <meta name="image" content="{% static 'img/favicon.ico' %}">
+
+  <!-- Schema.org for Google -->
+  <meta itemprop="name" content="Faraday">
+  <meta itemprop="description"
+    content="Faraday is creating a safe space for university students to connect and learn online.">
+  <meta itemprop="image" content="{% static 'img/favicon.ico' %}">
+
+  <!-- Open Graph general (Facebook, Pinterest & LinkedIn) -->
+  <meta property="og:title" content="Faraday">
+  <meta property="og:description" content="Faraday is creating a safe space for university students to connect and learn online.">
+  <meta property="og:image" content="{% static 'img/faraday-logo.svg' %}">
+  <meta property="og:url" content="{{ request.META.url }}">
+  <meta property="og:site_name" content="Faraday Africa">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary">
+  <meta property="twitter:title" content="Faraday">
+  <meta property="twitter:description"
+    content="Faraday is creating a safe space for university students to connect and learn online.">
+  <meta property="twitter:image:src" content="{% static 'img/faraday-logo.svg' %}">
+  <!-- End of SEO Meta Tags -->
+
+  <meta name="robots" content="all,follow">
+
+  <!-- Bootstrap CSS-->
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+  <!-- Font Awesome CSS-->
+  <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+
+  <!-- Custom Font Icons CSS-->
+  <link rel="stylesheet" href="{% static 'css/landy-iconfont.css' %}">
+
+  <!-- Brand fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,600;1,400&display=swap"
+    rel="stylesheet">
+
+
+
+  <!-- stylesheet-->
+  <link rel="stylesheet" href="{% static 'css/web_style.css' %}" id="theme-stylesheet">
+
+
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+
+  <!-- Tweaks for older IEs-->
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+
+<body>
+
+  <!-- navbar-->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://faraday.africa">
+        <img src="{% static 'img/faraday-logo.svg' %}" class="d-inline-block align-text-top">
+      </a>
+
+      <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+        class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto align-items-start align-items-lg-center">
+          <li class="nav-item"><a href="https://app.faraday.africa" class="nav-link link-scroll">App</a></li>
+          <li class="nav-item"><a href="https://community.faraday.africa" class="nav-link link-scroll">Community</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Hero header -->
+  <header id="header" class="header hero-home text-on-image">
+    <img class="hero-image" src="{% static 'img/header-image.png' %}" alt="hero-image">
+
+    <div class="hero-text-container">
+      <p class="hero-text">Help us bring Faraday to your Institution</p>
+    </div>
+
+    <div class="hero-text-container">
+      <img class="scroll" src="{% static 'img/scroll.svg' %}" alt="scroll">
+    </div>
+  </header>
+
+
+  <!-- Section 1 "our mission" -->
+  <section id="features" class="features">
+    <div class="container ">
+
+      <!-- Our mission -->
+      <div class="row video-block d-flex align-items-center">
+        <div class="col-lg-7">
+          <div style="padding:75% 0 0 0;position:relative;">
+            <iframe
+              src="https://player.vimeo.com/video/602873909?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;h=7080112f0f"
+              frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+              style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Faraday Mission.mp4"></iframe>
+          </div>
+          <script src="https://player.vimeo.com/api/player.js"></script>
+        </div>
+
+        <div class="text col-lg-5">
+          <h4 class="title">How we started...</h4>
+          <p class="body-text">
+            While our vision was always focused on enabling innovation through education in Africa's tertiary institutions, 
+            we started out as a learning platform designed for students in tertiarly institutions to combat failure by puting all learning resources in one place to help students learn at their own schedule, at their own pace and pass their courses with good grades. 
+          </p>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Section 2 "Why Faraday -->
+      <div class="row d-flex align-items-top">
+        <div class="text col-lg-5 order-2 order-lg-1">
+          <h4 class="title mobile-margin">...where we are.</h4>
+          <p class="body-text">
+            In a mission pivot, we are now focused on achieving our vision by enabling peer learning and connecting students together to achieve more. </p>
+          <a href="https://faraday.africa" class="btn btn-primary btn-secondary">Learn More</a>
+        </div>
+
+        <div class="image col-lg-7 order-1 order-lg-2">
+          <img src="{% static 'img/faraday-image.png' %}" alt="..." class="img-fluid">
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Form -->
+      <section id="newsletter" class="newsletter">
+
+        <div class="container ">
+          <div class="row align-items-center">
+            <div class="form-holder col-lg-7 order-2 order-lg-1">
+              <form class="newsletterForm">
+                <div class="form-group">
+
+                    <label>Select your institution</label>
+
+                    {% if schools %}
+
+                    <select name="institution" id="institution" class="form-control" required>
+
+                        <option value="" disabled selected hidden>Select your School</option>
+
+                        {% for item in schools %}
+
+                            <option>{{item}}</option>
+
+                        {% endfor %}
+
+                    </select>
+                    <div class="institution_error_isActiveText" style="display: none;"></div>
+
+                    {% else %}
+
+                        <select name="selectschool" id="select" class="form-control" required>
+
+                            <option value="" disabled selected hidden>Please reload this page to fetch schools</option>
+
+                        </select>
+
+                    {% endif %}
+
+                    <br>
+                    <br>
+
+                    <label>Add Faculty</label>
+                    <input type="text" name="schoolfaculty" id="schoolfaculty" placeholder="What's the name of your faculty?" required>
+                    <div class="schoolfaculty_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br>
+
+                    <label title="Enter the code for the faculty, e.g. ENG for Engineering">Add Faculty Code</label>
+                    <input type="text" name="schoolfacultycode" id="schoolfacultycode" placeholder="e.g ENG for Engineering" required>
+                    <div class="schoolfacultycode_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br>
+
+                    <label>Add Department</label>
+                    <input type="text" name="department" id="department" placeholder="What's the name of your department?" required>
+                    <div class="department_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br> 
+
+                    <label>Add Department Code</label>
+                    <input type="text" name="departmentcode" id="departmentcode" placeholder="e.g CSC for Computer Science" required>
+                    <div class="departmentcode_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br>
+
+                    <label>Add Department Degree</label>
+                    <input type="text" name="departmentdegree" id="departmentdegree" placeholder="e.g B.Eng or Bachelor of Engineering" required>
+                    <div class="departmentdegree_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br>
+
+                    <label>Add Department Duration</label>
+                    <input type="text" name="departmentduration" id="departmentduration" placeholder="e.g 5 or Five years or 5 years" required>
+                    <div class="departmentduration_error_isActiveText" style="display: none;"></div>
+
+                    <br>
+                    <br>
+
+                    <label>What's your Twitter handle (optional)</label>
+                    <input type="text" name="twitterhandle" id="twitterhandle" placeholder="To give you a shoutout on Twitter for helping">
+
+                    <div class="error_isActiveText" style="display: none;"></div>
+                  <button type="submit" class="btn btn-primary btn-brand submit">Submit</button>
+                </div>
+              </form>
+            </div>
+
+            <div class=" col-lg-5 order-1 order-lg-2">
+              <h4 class="title">Help us bring Faraday to your School</h4>
+              <!-- <p class="lead body-text"></p> -->
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <hr />
+
+      <!-- Section 4 "Our story"-->
+      <div class="row video-block d-flex align-items-center">
+        <div class="text col-lg-5 order-2 order-lg-1">
+          <h4 class="title">The team</h4>
+          <p class="body-text">Each story has a begining, ours started with friendship. Meet the team of friends dedicated to making this solution a success. Learn what inspired us and how we are building Faraday.</p>
+        </div>
+
+        <div class="col-lg-7 order-1 order-lg-2">
+          <div style="padding:75% 0 0 0;position:relative;">
+            <iframe
+              src="https://player.vimeo.com/video/602892597?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;h=7c9e71e224"
+              frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+              style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Our Story"></iframe></div>
+          <script src="https://player.vimeo.com/api/player.js"></script>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+  <!-- Scroll to top button -->
+  <div id="scrollTop">
+    <div class="d-flex align-items-center justify-content-end"><i class="fa fa-long-arrow-up"></i>To Top</div>
+  </div>
+
+  <!-- Baba Footer -->
+  <footer style="background: url({% static 'img/footer.png' %}) fill; background-repeat: no-repeat; height: 100%;">
+    <img class="footer-image" src="{% static 'img/footer.png' %}" alt="footer=-img">
+
+
+    <div class="footer-content">
+      <div class="container">
+        <div class="row">
+
+          <div class="color col-md-6 order-2 order-lg-1">
+            <img class="learn" src="{% static 'img/learn.svg' %}" alt="learn, connect, succeed">
+
+            <a class="social body-text" href="mailto:support@faraday.africa">support@faraday.africa</a>
+            <div class="social-icons">
+              <a target="_BLANK" href="https://twitter.com/faradayafrica"><img src="{% static 'img/twitter.svg' %}" alt="link to faraday twitter handle"></a>
+              <a target="_BLANK" href="https://www.youtube.com/channel/UCtNFJ9q1z52ICj3FqeyHjxw"><img src="{% static 'img/youtube.svg' %}" alt="link to faraday youtube channel"></a>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="col-md-12 text-white" style="text-align: center; font-size: 12px;">
+          <p>Faraday 2023. All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Javascript files-->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"> </script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
+  <script src="{% static 'vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+
+	$(document).on('change','select#id_region',function(e){
+        e.preventDefault();
+        var el = $(this);
+        var country = $('#id_country').val();
+        var region = el.val();
+        $.ajax({
+          url:"/account/ajax/cities/",
+          data:{country:country,region:region},
+          dataType:"json",
+          type:"POST",
+          async:true,
+          beforeSend: function(xhr, settings){
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+              // Only send the token to relative URLs i.e. locally.
+              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+            $('#id_city').html(' ');
+            $('label[for=id_city]').append('<img src="/static/img/load.gif" style="max-height:18px;" />');
+            
+          },
+          success:function(data){
+            status=data.save;
+            
+            console.log(data);
+            $.each(data.result.cities,function(i,item){
+              $('#id_city').append('<option value="'+item['id']+'">'+item['name']+'</option>');
+            });
+            
+            $('label[for=id_city]').find('img').remove();
+          }
+        });
+  
+  
+      });
+
+  </script>
+  
+</body>
+
+</html>
