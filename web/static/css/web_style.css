@@ -737,9 +737,19 @@ section.newsletter .form-group .submit {
   border-bottom: 2px solid var(--brand) !important;
 }
 
+.error_isActiveText {
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--white) !important;
+  background: #ff5b5b !important;
+}
+
 .success_isActiveText {
   text-align: center;
-  color: var(--brand) !important;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--white) !important;
   background: var(--brand) !important;
 }
 
