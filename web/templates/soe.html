@@ -233,8 +233,12 @@
                     <label>What's your Twitter handle (optional)</label>
                     <input type="text" name="twitterhandle" id="twitterhandle" placeholder="To give you a shoutout on Twitter for helping">
 
+                    <button type="submit" class="btn btn-primary btn-brand submit">Submit</button>
+
+                    <br>
+
                     <div class="error_isActiveText" style="display: none;"></div>
-                  <button type="submit" class="btn btn-primary btn-brand submit">Submit</button>
+                    <div class="success_isActiveText" style="display: none;"></div>
                 </div>
               </form>
             </div>
@@ -311,46 +315,14 @@
   <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
   <script src="{% static 'vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
   <script src="{% static 'vendor/owl.carousel/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-
   <script>
 
-	$(document).on('change','select#id_region',function(e){
-        e.preventDefault();
-        var el = $(this);
-        var country = $('#id_country').val();
-        var region = el.val();
-        $.ajax({
-          url:"/account/ajax/cities/",
-          data:{country:country,region:region},
-          dataType:"json",
-          type:"POST",
-          async:true,
-          beforeSend: function(xhr, settings){
-            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-              // Only send the token to relative URLs i.e. locally.
-              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            }
-            $('#id_city').html(' ');
-            $('label[for=id_city]').append('<img src="/static/img/load.gif" style="max-height:18px;" />');
-            
-          },
-          success:function(data){
-            status=data.save;
-            
-            console.log(data);
-            $.each(data.result.cities,function(i,item){
-              $('#id_city').append('<option value="'+item['id']+'">'+item['name']+'</option>');
-            });
-            
-            $('label[for=id_city]').find('img').remove();
-          }
-        });
-  
-  
-      });
+    const airtableApiKey = "{{ AIRTABLE_API_KEY }}"
+    const airtableBaseId = "{{ AIRTABLE_BASEID }}";
+    const airtabletableId = "{{ AIRTABLE_TABLEID }}";
 
   </script>
+  <script src="{% static 'js/main.js' %}"></script>
   
 </body>
 
