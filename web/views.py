@@ -16,7 +16,7 @@ def get_helpus (request):
     AIRTABLE_BASEID = settings.AIRTABLE_BASEID
     AIRTABLE_TABLEID = settings.AIRTABLE_TABLEID
     
-    schools = School.objects.all().filter(unlisted=True)
+    schools = School.objects.all().filter(unlisted=True).order_by('name')
     
     context = {
         'schools': schools,
