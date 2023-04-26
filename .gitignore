@@ -110,6 +110,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+/staticfiles
+staticfiles/
 
 # Spyder project settings
 .spyderproject
