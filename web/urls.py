@@ -9,7 +9,7 @@ from . import views
 # local imports
 from academia.views import home
 
-app_name = "academia"
+app_name = "web"
 
 urlpatterns = [
     path("", home, name="homepage"),
