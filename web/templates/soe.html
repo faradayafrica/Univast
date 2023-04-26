@@ -26,7 +26,9 @@
   <meta property="og:title" content="Help Build Faraday">
   <meta property="og:description" content="Contribute to building Faraday by making it available in your School.">
   <meta property="og:image" content="{% static 'img/faraday-logo.svg' %}">
-  <meta property="og:url" content="{{ request.build_absolute_uri() }}">
+  {% with absolute_url=request.build_absolute_uri %}
+  <meta property="og:url" content="{{ absolute_url }}">
+  {% endwith %}
   <meta property="og:site_name" content="Faraday Africa">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="website">
