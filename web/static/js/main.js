@@ -1,4 +1,22 @@
 $(function () {
+
+    // ------------------------------------------------------- //
+    // Institution label change
+    // ------------------------------------------------------- //
+    const labelElement = document.getElementById('institution-label');
+    const selectElement = document.getElementById('institution');
+    const originalLabelText = labelElement.textContent;
+
+    // Change label text when select box is focused
+    selectElement.addEventListener('focus', function() {
+        labelElement.textContent = "If you don't find your institution, we already have its information complete or don't have it at all.";
+    });
+
+    // Change label text back to its original value when select box loses focus
+    selectElement.addEventListener('blur', function() {
+        labelElement.textContent = originalLabelText;
+    });
+
     // ------------------------------------------------------- //
     // Scroll Top Button
     // ------------------------------------------------------- //
