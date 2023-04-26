@@ -44,7 +44,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
+if DEBUG == True:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
