@@ -1,12 +1,14 @@
 import os
 from pathlib import Path
 from decouple import config
-from django.core.management.utils import get_random_secret_key
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(" ")])
+ALLOWED_HOSTS = config(
+    "DJANGO_ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(" ")]
+)
 
 # Application definition
 
