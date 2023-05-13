@@ -1,13 +1,13 @@
-from Univast.settings.settings import *
+from Univast.settings.settings import * # noqa
 
 DEBUG = True
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY") # noqa
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), # noqa
     }
 }
 
