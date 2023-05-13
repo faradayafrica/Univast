@@ -108,7 +108,7 @@ class SchoolListAPIView(generics.ListAPIView):
             return Response(data=response, status=status.HTTP_200_OK)
 
         # If data is not cached, fetch it from the queryset
-        schools = self.get_queryset(country_code)
+        schools = self.get_queryset(country_code.upper())
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
