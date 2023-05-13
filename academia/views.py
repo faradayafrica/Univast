@@ -1,6 +1,3 @@
-# Stdlib Imports
-from typing import List
-
 # Django imports
 from django.shortcuts import render
 from django.core.cache import cache
@@ -91,7 +88,8 @@ class SchoolListAPIView(generics.ListAPIView):
         """
         This API view retrieves the list of schools.
 
-        :param country_code: the code of country you wish to get the list of available schools in.
+        :param country_code: the code of country you wish to
+            get the list of available schools in.
         \n:type country_code: str
         """
         # Check if the data is already cached
@@ -100,13 +98,13 @@ class SchoolListAPIView(generics.ListAPIView):
 
         if data is not None:
             # If data is cached, return it
-            
+
             response = success_response(
                 status=True,
-                message=f"Retrieved all schools from cache!",
+                message="Retrieved all schools from cache!",
                 data=data,
             )
-                
+
             return Response(data=response, status=status.HTTP_200_OK)
 
         # If data is not cached, fetch it from the queryset
@@ -120,14 +118,16 @@ class SchoolListAPIView(generics.ListAPIView):
 
         response = success_response(
             status=True,
-            message=f"Retrieved all schools from db!",
+            message="Retrieved all schools from db!",
             data=serializer.data,
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
     def get_queryset(self, code: str) -> QuerySet[School]:
         country_code = get_country(code)
-        return self.queryset.filter(country__country_code=country_code).order_by('name')
+        return self.queryset.filter(
+            country__country_code=country_code
+        ).order_by("name")
 
 
 class SchoolFacultyListAPIView(generics.ListAPIView):
@@ -139,7 +139,8 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         """
         This API view retrieves the list of faculties in a school.
 
-        :param school_code: the name of school you wish to get the list of available faculties in.\n
+        :param school_code: the name of school you wish to
+            get the list of available faculties in.\n
         \n:type school_code: str\n
         """
         schools = self.get_queryset(school_code)
@@ -149,14 +150,14 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
 
         response = success_response(
             status=True,
-            message=f"Retrieved all faculties!",
+            message="Retrieved all faculties!",
             data=serializer.data,
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
     def get_queryset(self, code: str) -> QuerySet[Faculty]:
         school_code = get_school(code)
-        return self.queryset.filter(school__code=school_code).order_by('name')
+        return self.queryset.filter(school__code=school_code).order_by("name")
 
 
 class DepartmentListAPIView(generics.ListAPIView):
@@ -172,9 +173,11 @@ class DepartmentListAPIView(generics.ListAPIView):
         """
         This API view retrieves the list of departments in a school.
 
-        :param school_code: the school (code) you wish to get the list of available departments in.
+        :param school_code: the school (code) you wish to
+            get the list of available departments in.
         \n:type school_code: str\n
-        \n:param faculty_name: the name of faculty you wish to get the list of available departments in.
+        \n:param faculty_name: the name of faculty you wish
+            to get the list of available departments in.
         \n:type faculty_name: str\n
         """
         schools = self.get_queryset(school_code, faculty_name)
@@ -184,7 +187,7 @@ class DepartmentListAPIView(generics.ListAPIView):
 
         response = success_response(
             status=True,
-            message=f"Retrieved all departments!",
+            message="Retrieved all departments!",
             data=serializer.data,
         )
         return Response(data=response, status=status.HTTP_200_OK)
@@ -194,4 +197,4 @@ class DepartmentListAPIView(generics.ListAPIView):
         faculty_name = get_faculty(faculty)
         return self.queryset.filter(
             school__code=school_code, faculty__name=faculty_name
-        ).order_by('name')
+        ).order_by("name")
