@@ -34,7 +34,6 @@ def get_country(code: str) -> str:
     """
 
     if not Country.objects.filter(country_code=code).exists():
-        print(code.lower())
         raise exceptions.NotFound({"message": "Country not found!"})
     return code
 

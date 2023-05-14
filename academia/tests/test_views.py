@@ -3,8 +3,7 @@ from random import randint
 
 # Django Imports
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
+from django.db.models import QuerySet
 
 # Rest Framework Imports
 from rest_framework.test import APIClient, APITestCase
@@ -20,7 +19,7 @@ class BaseTestCase(object):
     """Base test case to setup fixtures."""
 
     @classmethod
-    def create_countries(cls):
+    def create_countries(cls) -> QuerySet[Country]:
         """This method is responsible for creating countries fixtures."""
 
         return Country.objects.bulk_create(
@@ -47,7 +46,7 @@ class BaseTestCase(object):
         )
 
     @classmethod
-    def create_schools(cls):
+    def create_schools(cls) -> QuerySet[School]:
         """This method is responsible for creating schools fixtures."""
 
         country = cls.create_countries()[2]
@@ -75,7 +74,7 @@ class BaseTestCase(object):
         )
 
     @classmethod
-    def create_faculties(cls):
+    def create_faculties(cls) -> QuerySet[Faculty]:
         """This method is responsible for creating school faculties fixtures."""
 
         alx_africa = cls.create_schools()[1]
@@ -86,31 +85,45 @@ class BaseTestCase(object):
                 Faculty(school=alx_africa, name="Product Management"),
             ]
         )
+        
+    @classmethod
+    def create_degrees(cls) -> QuerySet[Degree]:
+        """This method is responsible for creating degrees fixtures."""
+        
+        return Degree.objects.bulk_create(
+            [
+                Degree(name="Bachelor of Science", code="B.Sc"),
+                Degree(name="Bachelor of Technology", code="B.Tech")
+            ]
+        )
 
     @classmethod
-    def create_departments(cls):
+    def create_departments(cls) -> QuerySet[Department]:
         """This method is responsible for creating departments in a school faculty."""
 
         alx_africa = cls.create_schools()[1]
         bck_eng = cls.create_faculties()[1]
+        degrees = cls.create_degrees()
 
         return Department.objects.bulk_create(
             [
                 Department(
                     school=alx_africa,
                     faculty=bck_eng,
+                    degree=degrees[0],
                     name="JavaScript/TypeScript + NodeJS + MongoDB",
                 ),
                 Department(
                     school=alx_africa,
                     faculty=bck_eng,
+                    degree=degrees[1],
                     name="Python + Django + PostgreSQL",
                 ),
             ]
         )
         
     @classmethod
-    def get_user_apikey(cls) -> str:
+    def get_user_apikey(cls) -> dict:
         """
         This method is responsible for creating an API key.
 
@@ -119,7 +132,7 @@ class BaseTestCase(object):
         """
 
         _, api_key = APIKey.objects.create_key(
-            name="Test", expiry_date="2023-01-30 2:00:00"
+            name="Test", expiry_date="2029-01-30 2:00:00"
         )
         headers = {"HTTP_AUTHORIZATION": f"Api-Key {api_key}"}
         return headers
@@ -204,8 +217,6 @@ class DepartmentListAPITestCase(APITestCase):
         self.bck_eng.save()
 
         self.departments = BaseTestCase.create_departments()
-        self.departments[0].degree.add(self.nd)
-        self.departments[1].degree.add(self.nd)
 
         self.client = APIClient()
 

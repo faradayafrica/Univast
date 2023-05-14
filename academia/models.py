@@ -51,10 +51,7 @@ class Country(models.Model):
         help_text="The country name code in uppercase only, e.g NG.",
     )
     schools = models.ManyToManyField(
-        "School",
-        blank=True,
-        related_name="country_schools",
-        editable=False
+        "School", blank=True, related_name="country_schools", editable=False
     )
 
     class Meta:
@@ -70,7 +67,8 @@ class School(models.Model):
 
     Fields:
         - id (int): the object unique uuid
-        - listed (bool): indicate if the school is no longer valid and will not be returned in API calls (defaults to True)
+        - listed (bool): indicate if the school is no longer valid and 
+            will not be returned in API calls (defaults to True)
         - type (str): the type of higher institution
         - name (str): the name of school
         - code (str): the associated school short code. e.g UNIZIK
@@ -108,7 +106,7 @@ class School(models.Model):
     )
     unlisted = models.BooleanField(
         default=True,
-        help_text="Tick to indicate no longer valid and this school will not be returned in API Response, untick to include in API Response",
+        help_text="Tick to indicate no longer valid and this school will not be returned in API Response, untick to include in API Response",  # noqa
     )
     type = models.CharField(
         max_length=20,
@@ -185,18 +183,20 @@ class School(models.Model):
     class Meta:
         verbose_name_plural = "Schools"
         indexes = [
-            Index(fields=[
-                'name', 
-                'code',
-                'country',
-                'type',
-                'founded',
-                'ownership',
-                'owned_by',
-                'address',
-                'website',
-                'id'
-                ]),
+            Index(
+                fields=[
+                    "name",
+                    "code",
+                    "country",
+                    "type",
+                    "founded",
+                    "ownership",
+                    "owned_by",
+                    "address",
+                    "website",
+                    "id",
+                ]
+            ),
         ]
 
     def __str__(self) -> str:
@@ -211,11 +211,15 @@ class Faculty(models.Model):
         - id (int): the object unique uuid
         - school (fk): foreign key relationship to the academia_school table
         - name (str): the name of faculty
-        - department (m2m): many to many relationship to the academia_faculty_departments table
+        - department (m2m): many to many relationship to the 
+            academia_faculty_departments table
     """
 
     id = models.UUIDField(
-        default=uuid.uuid4, unique=True, primary_key=True, editable=False,
+        default=uuid.uuid4,
+        unique=True,
+        primary_key=True,
+        editable=False,
     )
     school = models.ForeignKey(
         School,
@@ -236,14 +240,11 @@ class Faculty(models.Model):
         related_name="faculty_departments",
         editable=False,
     )
+
     class Meta:
         verbose_name_plural = "Faculties"
         indexes = [
-            Index(fields=[
-                'school',
-                'name',
-                'id'
-                ]),
+            Index(fields=["school", "name", "id"]),
         ]
 
     def __str__(self):
@@ -303,7 +304,7 @@ class Department(models.Model):
     degree = models.ForeignKey(
         "Degree",
         blank=False,
-        default='',
+        default="",
         on_delete=models.CASCADE,
         help_text="The type of degree offered by this department.",
     )
@@ -324,11 +325,13 @@ class Department(models.Model):
     class Meta:
         verbose_name_plural = "Departments"
         indexes = [
-            Index(fields=[
-                "id",
-                "name",
-                "degree",
-            ])
+            Index(
+                fields=[
+                    "id",
+                    "name",
+                    "degree",
+                ]
+            )
         ]
 
     def __str__(self) -> str:
