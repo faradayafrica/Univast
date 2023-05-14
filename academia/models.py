@@ -5,6 +5,9 @@ import uuid
 from django.db import models
 from django.db.models import Index
 
+# Third Party Imports
+from cloudinary.models import CloudinaryField
+
 
 class Country(models.Model):
     """
@@ -158,11 +161,10 @@ class School(models.Model):
         blank=True,
         help_text="The website of this institution",
     )
-    logo = models.ImageField(
-        null=True,
-        blank=False,
+    logo = CloudinaryField(
+        "univast-school-logos",
         help_text="The logo of this institution",
-        default="logo.png",
+        default="logo.png"
     )
     country = models.ForeignKey(
         Country,
