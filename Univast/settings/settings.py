@@ -2,6 +2,11 @@ import os
 from pathlib import Path
 from decouple import config
 
+# Cloudinary Imports
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -27,6 +32,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "rest_framework_api_key",
     "corsheaders",
+    "cloudinary",
 ]
 
 MIDDLEWARE = [
@@ -126,11 +132,17 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles/images")
 
+
+# Cloudinary Configuration
+
+
+cloudinary.config(
+    cloud_name=config("CLOUDINARY_CLOUD_NAME"),
+    api_key=config("CLOUDINARY_API_KEY"),
+    api_secret=config("CLOUDINARY_API_SECRET"),
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-AIRTABLE_API_KEY = config("AIRTABLE_API_KEY")
-AIRTABLE_BASEID = config("AIRTABLE_BASEID")
-AIRTABLE_TABLEID = config("AIRTABLE_TABLEID")

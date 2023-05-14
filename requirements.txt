@@ -12,3 +12,4 @@ psycopg2-binary==2.9.2
 rest-api-payload==0.0.7
 sqlparse==0.4.3
 whitenoise==6.2.0
+cloudinary==1.32.0

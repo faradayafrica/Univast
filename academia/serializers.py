@@ -75,16 +75,8 @@ class SchoolSerializer(serializers.ModelSerializer):
 
     def get_logo(self, obj: School) -> str:
         """This method gets the logo of the school."""
-
-        request = self.context.get("request")
-        logo = (
-            request.scheme
-            + "://"
-            + request.get_host()
-            + "/images/"
-            + str(obj.logo)
-        )
-        return logo
+        
+        return obj.logo.url
 
 
 class FacultySerializer(serializers.ModelSerializer):
