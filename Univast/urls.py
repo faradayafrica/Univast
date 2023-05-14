@@ -40,8 +40,7 @@ urlpatterns = [
         schema_view.with_ui("redoc", cache_timeout=0),
         name="api_redocs",
     ),
-]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler400 = "academia.views.custom_bad_request_view"
 handler403 = "academia.views.custom_permission_denied_view"
