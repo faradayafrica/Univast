@@ -16,6 +16,9 @@ env:
   AIRTABLE_BASEID: "value"
   AIRTABLE_TABLEID: "value"
   SECRET_KEY: "something-secretive"
+  CLOUDINARY_CLOUD_NAME: "value"
+  CLOUDINARY_API_KEY: "value"
+  CLOUDINARY_API_SECRET: "value"
 
 jobs:
   build:
