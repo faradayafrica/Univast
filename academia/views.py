@@ -51,6 +51,7 @@ def custom_bad_request_view(request, exception=None):
 class CountryListAPIView(generics.ListAPIView):
     serializer_class = CountrySerializer
     permission_classes = (HasAPIKey,)
+    throttle_scope = "rate"
     queryset = Country.objects.only("id", "name", "country_code")
 
     def get(self, request: Request) -> Response:
@@ -72,6 +73,7 @@ class CountryListAPIView(generics.ListAPIView):
 class SchoolListAPIView(generics.ListAPIView):
     serializer_class = SchoolSerializer
     permission_classes = (HasAPIKey,)
+    throttle_scope = "rate"
     queryset = School.objects.only(
         "id",
         "type",
@@ -133,6 +135,7 @@ class SchoolListAPIView(generics.ListAPIView):
 class SchoolFacultyListAPIView(generics.ListAPIView):
     serializer_class = FacultySerializer
     permission_classes = (HasAPIKey,)
+    throttle_scope = "rate"
     queryset = Faculty.objects.only("id", "name")
 
     def get(self, request: Request, school_code: str) -> Response:
@@ -163,6 +166,7 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
 class DepartmentListAPIView(generics.ListAPIView):
     serializer_class = DepartmentSerializer
     permission_classes = (HasAPIKey,)
+    throttle_scope = "rate"
     queryset = Department.objects.prefetch_related("degree").only(
         "id", "name", "degree", "duration"
     )
