@@ -20,3 +20,7 @@ DATABASES = {
 # SSL Definition
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
+
+# Celery settings
+CELERY_BROKER_URL = config("CELERY_BROKER_URL") + '?ssl_cert_reqs=required'
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND") + '?ssl_cert_reqs=required'
