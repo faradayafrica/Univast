@@ -28,7 +28,7 @@ class Client(models.Model):
         DEVELOPER = "developer"
         ORGANISATION = "organisation"
 
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, db_index=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
