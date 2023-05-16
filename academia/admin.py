@@ -95,7 +95,14 @@ class AdminClient(admin.ModelAdmin):
 
 
 class AdminClientAPIKey(admin.ModelAdmin):
-    list_display: list = ["client", "rate", "prefix", "name", "expiry_date"]
+    list_display: list = [
+        "client",
+        "rate",
+        "prefix",
+        "name",
+        "expiry_date",
+        "expiry_time",
+    ]
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -113,7 +120,7 @@ class AdminClientAPIKey(admin.ModelAdmin):
             if request.user.is_superuser
             else False
         )
-        
+
 
 admin.site.register(Country, AdminCountry)
 admin.site.register(School, AdminSchool)
