@@ -9,5 +9,9 @@ class APIKeyThrottling(SimpleRateThrottle):
     scope = "rate"
 
     def get_cache_key(self, request: HttpRequest, view):
-        api_key = request.headers.get("Authorization").split(" ")[-1]
+        authorization = request.headers.get("Authorization", None)
+        if not authorization:
+            return
+
+        api_key = authorization.split(" ")[-1]
         return api_key
