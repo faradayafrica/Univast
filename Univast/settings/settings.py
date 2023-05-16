@@ -147,9 +147,7 @@ cloudinary.config(
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
 
-# Celery settings
-CELERY_BROKER_URL = config("CELERY_BROKER_URL") + '?ssl_cert_reqs=required'
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND") + '?ssl_cert_reqs=required'
+# Celery base config
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
