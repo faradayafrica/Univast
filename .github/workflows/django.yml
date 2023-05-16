@@ -16,6 +16,7 @@ env:
   CLOUDINARY_CLOUD_NAME: "value"
   CLOUDINARY_API_KEY: "value"
   CLOUDINARY_API_SECRET: "value"
+  RECIEVER_WEBHOOK_API_URLS: "http://127.0.0.1 http://127.0.0.1"
 
 jobs:
   build:
