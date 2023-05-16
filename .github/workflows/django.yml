@@ -17,6 +17,8 @@ env:
   CLOUDINARY_API_KEY: "value"
   CLOUDINARY_API_SECRET: "value"
   RECIEVER_WEBHOOK_API_URLS: "http://127.0.0.1 http://127.0.0.1"
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
 
 jobs:
   build:
