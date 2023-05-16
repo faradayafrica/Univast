@@ -7,6 +7,74 @@ from django.db.models import Index
 
 # Third Party Imports
 from cloudinary.models import CloudinaryField
+from rest_framework_api_key.models import APIKey
+
+
+class Client(models.Model):
+    """
+    Defines the schema for client table in the database.
+
+    Fields:
+        - id (uuid): The client unique uuid4 identifier.
+        - name (str): The client name.
+        - email (str): The client email address.
+        - is_verified (bool): Is the client verified?
+        - client_type (str): Is the client a developer or an organisation?
+        - date_created (datetime): The date and time object was created.
+        - date_modified (datetime): The data and time object was modified.
+    """
+
+    class ClientTypes(models.Choices):
+        DEVELOPER = "developer"
+        ORGANISATION = "organisation"
+
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, db_index=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(max_length=255, unique=True)
+    is_verified = models.BooleanField(default=False)
+    client_type = models.CharField(choices=ClientTypes.choices, max_length=25)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "clients"
+        indexes = [models.Index(fields=["id", "email", "client_type"])]
+
+    def __str__(self) -> str:
+        return f"Client: {self.name}"
+
+
+class ClientAPIKey(APIKey):
+    """
+    Defines the clients_apikey table in the database.
+
+    Fields:
+        - *: inherits apikey from rest_framework_api_key
+        - client (o2o): A one-to-one relationship to the client.
+        - rate (bigint): The number of requests to be made per hour.
+        - expiry_time (str): The expiry time for the key to expire.
+    """
+
+    class ExpireWhen(models.Choices):
+        THIRTY_DAYS = "30"
+        SIXTY_DAYS = "60"
+        NINTY_DAYS = "90"
+
+    client = models.OneToOneField(
+        Client, on_delete=models.CASCADE, related_name="api_key"
+    )
+    rate = models.BigIntegerField(
+        default=50, help_text="Default throttle rate for requests per hour."
+    )
+    expiry_time = models.CharField(choices=ExpireWhen.choices, max_length=2)
+
+    class Meta:
+        db_table = "clients_apikey"
+        verbose_name = "Clients API Key"
+        verbose_name_plural = "Clients API Key(s)"
+
+    def __str__(self) -> str:
+        return f"Client API Key: {self.client_id}"
 
 
 class Country(models.Model):
@@ -70,7 +138,7 @@ class School(models.Model):
 
     Fields:
         - id (int): the object unique uuid
-        - listed (bool): indicate if the school is no longer valid and 
+        - listed (bool): indicate if the school is no longer valid and
             will not be returned in API calls (defaults to True)
         - type (str): the type of higher institution
         - name (str): the name of school
@@ -164,7 +232,7 @@ class School(models.Model):
     logo = CloudinaryField(
         "univast-school-logos",
         help_text="The logo of this institution",
-        default="logo.png"
+        default="logo.png",
     )
     country = models.ForeignKey(
         Country,
@@ -213,7 +281,7 @@ class Faculty(models.Model):
         - id (int): the object unique uuid
         - school (fk): foreign key relationship to the academia_school table
         - name (str): the name of faculty
-        - department (m2m): many to many relationship to the 
+        - department (m2m): many to many relationship to the
             academia_faculty_departments table
     """
 
