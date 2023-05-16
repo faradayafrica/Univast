@@ -148,6 +148,8 @@ cloudinary.config(
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
 
+RECIEVER_WEBHOOK_API_URLS = config("RECIEVER_WEBHOOK_API_URLS")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
