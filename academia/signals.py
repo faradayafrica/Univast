@@ -8,22 +8,9 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 # Local imports
-from .models import School, Country, Faculty, Department, Degree
+from academia.models import School, Country, Faculty, Department, Degree
+from academia.tasks import dispatch_webhook
 
-def webhook(type, fid):
-
-    # Dispatch webhook
-    API_URLS = settings.RECIEVER_WEBHOOK_API_URLS
-    webhook_urls = API_URLS.split(' ')
-
-    for webhook_url in webhook_urls:
-        
-        # Include ID in the request body
-        payload = {
-                    'fid': str(fid),
-                    'type': type
-                  }
-        response_hook = requests.post(webhook_url, data=payload)
 
 def invalidate_country_cache(sender, instance, **kwargs):
 
@@ -39,7 +26,7 @@ def webhook_clear_school_cache(sender, instance, **kwargs):
         cache.delete(cache_key)
 
     # Dispatch webhook
-    webhook("school", instance.id)
+    dispatch_webhook.delay("school", instance.id)
  
 def webhook_clear_faculty_cache(sender, instance, **kwargs):
     school_code = instance.school.code
@@ -48,7 +35,7 @@ def webhook_clear_faculty_cache(sender, instance, **kwargs):
         cache.delete(cache_key)
     
     # Dispatch webhook
-    webhook("faculty", instance.id)
+    dispatch_webhook.delay("faculty", instance.id)
 
 def webhook_clear_department_cache(sender, instance, **kwargs):
     # Clear Cache
@@ -59,7 +46,7 @@ def webhook_clear_department_cache(sender, instance, **kwargs):
         cache.delete(cache_key)
         
     # Dispatch webhook
-    webhook("department", instance.id)
+    dispatch_webhook.delay("department", instance.id)
 
 post_save.connect(invalidate_country_cache, sender=Country)
 post_save.connect(webhook_clear_school_cache, sender=School)

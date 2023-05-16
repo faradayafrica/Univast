@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # third party packages
     "rest_framework",
     "drf_yasg",
+    "django_celery_beat",
     "rest_framework_api_key",
     "corsheaders",
     "cloudinary",
@@ -94,7 +95,7 @@ REST_FRAMEWORK = {
         "academia.throttling.APIKeyThrottling"
     ],
     'DEFAULT_THROTTLE_RATES': {
-        "rate": "50/hour"
+        "rate": "500/hour"
     }
 }
 
@@ -140,13 +141,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles/images")
 
 
 # Cloudinary Configuration
-
-
 cloudinary.config(
     cloud_name=config("CLOUDINARY_CLOUD_NAME"),
     api_key=config("CLOUDINARY_API_KEY"),
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
+
+# Celery settings
+CELERY_BROKER_URL = config("CELERY_BROKER_URL") + '?ssl_cert_reqs=required'
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND") + '?ssl_cert_reqs=required'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = "Africa/Lagos"
 
 RECIEVER_WEBHOOK_API_URLS = config("RECIEVER_WEBHOOK_API_URLS")
 
