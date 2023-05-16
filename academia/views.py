@@ -8,9 +8,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.request import Request
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 from rest_framework_api_key.permissions import HasAPIKey
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from rest_framework.decorators import permission_classes
 
 # Own imports
 from academia.models import Country, School, Faculty, Department
@@ -71,43 +70,6 @@ class GetObjectListAPIView(generics.ListAPIView):
         return Response(data=response, status=status.HTTP_200_OK)
         
 
-@permission_classes((HasAPIKey,))
-def get_object(request):
-    object_type = request.GET.get('type')
-    object_id = request.GET.get('fid')
-    
-    print("object_type: " + object_type)
-    print("object_id: " + object_id)
-
-    if object_type not in ("school", "faculty", "department"):
-        print("Error: " + f"object type by name {object_type} is not recognised.")
-        # response = success_response(
-        #     status=False,
-        #     message="Retrieved all schools from cache!",
-        #     data={}
-        # )
-        return Response(data="Errorrrr", status=status.HTTP_400_BAD_REQUEST)
-
-    # if object_type == "school":
-    #     school = get_object_or_404(School, id=object_id)
-    #     serializer = SchoolSerializer(school, many=False)
-
-    # elif object_type == "faculty":
-    #     faculty = get_object_or_404(Faculty, id=object_id)
-    #     serializer = FacultySerializer(faculty, many=False)
-
-    # elif object_type == "department":
-    #     department = get_object_or_404(Department, id=object_id)
-    #     serializer = DepartmentSerializer(department, many=False)
-
-    # response = success_response(
-    #     status=True,
-    #     message="Retrieved updated Fid",
-    #     data=serializer.data,
-    # )
-    # return Response(data=response, status=status.HTTP_200_OK, format='json')
-
-
 # Cutom 404 handler
 def custom_page_not_found_view(request, exception):
     return render(request, "academia/404.html", {})
@@ -140,12 +102,10 @@ class CountryListAPIView(generics.ListAPIView):
         """
 
         # Check if the data is already cached
-        key = f"countries_in_univast"
+        key = "countries_in_univast"
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all schools from cache!",
@@ -197,8 +157,6 @@ class SchoolListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all schools from cache!",
@@ -250,8 +208,6 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all faculties from cache!",
@@ -307,8 +263,6 @@ class DepartmentListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all departments from cache!",
