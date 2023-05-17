@@ -139,14 +139,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "staticfiles/images")
 
-
-# Cloudinary Configuration
-cloudinary.config(
-    cloud_name=config("CLOUDINARY_CLOUD_NAME"),
-    api_key=config("CLOUDINARY_API_KEY"),
-    api_secret=config("CLOUDINARY_API_SECRET"),
-)
-
 # Airtbale Configuration
 AIRTABLE_API_KEY = config("AIRTABLE_API_KEY")
 AIRTABLE_BASEID = config("AIRTABLE_BASEID")
