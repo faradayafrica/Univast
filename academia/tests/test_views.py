@@ -1,5 +1,6 @@
 # Stdlib Imports
 from random import randint
+from datetime import datetime, timedelta
 
 # Django Imports
 from django.urls import reverse
@@ -8,11 +9,16 @@ from django.db.models import QuerySet
 # Rest Framework Imports
 from rest_framework.test import APIClient, APITestCase
 
-# Third Party Imports
-from rest_framework_api_key.models import APIKey
-
 # Own Imports
-from academia.models import Country, School, Faculty, Department, Degree
+from academia.models import (
+    Country,
+    School,
+    Faculty,
+    Department,
+    Degree,
+    Client,
+    ClientAPIKey,
+)
 
 
 class BaseTestCase(object):
@@ -85,15 +91,15 @@ class BaseTestCase(object):
                 Faculty(school=alx_africa, name="Product Management"),
             ]
         )
-        
+
     @classmethod
     def create_degrees(cls) -> QuerySet[Degree]:
         """This method is responsible for creating degrees fixtures."""
-        
+
         return Degree.objects.bulk_create(
             [
                 Degree(name="Bachelor of Science", code="B.Sc"),
-                Degree(name="Bachelor of Technology", code="B.Tech")
+                Degree(name="Bachelor of Technology", code="B.Tech"),
             ]
         )
 
@@ -121,7 +127,7 @@ class BaseTestCase(object):
                 ),
             ]
         )
-        
+
     @classmethod
     def get_user_apikey(cls) -> dict:
         """
@@ -131,8 +137,20 @@ class BaseTestCase(object):
         :return: The headers are being returned.
         """
 
-        _, api_key = APIKey.objects.create_key(
-            name="Test", expiry_date="2029-01-30 2:00:00"
+        client = Client.objects.get_or_create(
+            name="univast-test",
+            email="univast@faraday.africa",
+            is_verified=True,
+            client_type=Client.ClientTypes.ORGANISATION,
+        )[0]
+        expiry_date = datetime.now() + timedelta(days=int("30"))
+        _, api_key = ClientAPIKey.objects.create_key(
+            name="univast-apikey",
+            expiry_date=expiry_date,
+            expiry_time=ClientAPIKey.ExpireWhen.THIRTY_DAYS,
+            client=client,
+            scope=client.name,
+            rate=30,
         )
         headers = {"HTTP_AUTHORIZATION": f"Api-Key {api_key}"}
         return headers
