@@ -147,6 +147,11 @@ cloudinary.config(
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
 
+# Airtbale Configuration
+AIRTABLE_API_KEY = config("AIRTABLE_API_KEY")
+AIRTABLE_BASEID = config("AIRTABLE_BASEID")
+AIRTABLE_TABLEID = config("AIRTABLE_TABLEID")
+
 # Celery base config
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_SERIALIZER = 'json'
