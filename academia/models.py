@@ -63,6 +63,7 @@ class ClientAPIKey(APIKey):
     client = models.OneToOneField(
         Client, on_delete=models.CASCADE, related_name="api_key"
     )
+    scope = models.SlugField(unique=True, max_length=100)
     rate = models.BigIntegerField(
         default=50, help_text="Default throttle rate for requests per hour."
     )
