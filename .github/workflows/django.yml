@@ -68,9 +68,6 @@ jobs:
           
       - name: Run migrations
         run: python manage.py migrate
-            
-      - name: Start Redis server
-        run: docker-compose up -d redis
         
       - name: Run Tests
         run: |
