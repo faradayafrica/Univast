@@ -64,6 +64,9 @@ jobs:
           pip install -r requirements.txt
       - name: Run migrations
         run: python manage.py migrate
+        env:
+            REDIS_HOST: localhost
+            REDIS_PORT: 6379
       - name: Run Tests
         run: |
           python manage.py test
