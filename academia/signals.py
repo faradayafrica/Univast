@@ -26,6 +26,7 @@ def webhook_clear_school_cache(sender, instance, **kwargs):
         cache.delete(cache_key)
 
     # Dispatch webhook
+    print("Dispatching webhook")
     dispatch_webhook.delay("school", instance.id)
  
 def webhook_clear_faculty_cache(sender, instance, **kwargs):

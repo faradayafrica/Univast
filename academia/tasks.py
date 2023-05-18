@@ -9,6 +9,7 @@ from django.conf import settings
 
 @shared_task
 def dispatch_webhook(type, fid):
+    print("RECEIVED TASK")
     
     # Dispatch webhook
     API_URLS = settings.RECIEVER_WEBHOOK_API_URLS
@@ -22,3 +23,6 @@ def dispatch_webhook(type, fid):
                     'type': type
                   }
         response_hook = requests.post(webhook_url, data=payload)
+        print("RESPONSE FROM WEBHOOK: ", response_hook.text)
+      
+    print("DONE WITH TASK")

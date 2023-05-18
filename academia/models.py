@@ -66,10 +66,9 @@ class ClientAPIKey(APIKey):
     )
     scope = models.SlugField(unique=True, max_length=100)
     rate = models.BigIntegerField(
-        default=50, help_text="Default throttle rate for requests per hour."
+        default=60, help_text="Default throttle rate for requests per hour."
     )
-    expiry_time = models.CharField(
-        default=timezone.now, choices=ExpireWhen.choices, max_length=2)
+    expiry_time = models.CharField(choices=ExpireWhen.choices, max_length=2)
 
     class Meta:
         db_table = "clients_apikey"

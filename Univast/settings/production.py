@@ -25,14 +25,14 @@ CACHES = {
     }
 }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [config("CELERY_BROKER")], # redis host must be in the format of redis://:password@host:port/db_number
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [config("CELERY_BROKER")], # redis host must be in the format of redis://:password@host:port/db_number
+#         },
+#     },
+# }
 
 # SSL Definition
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
