@@ -1,5 +1,6 @@
 # Stdlib Imports
 import uuid
+from django.utils import timezone
 
 # Django Imports
 from django.db import models
@@ -67,7 +68,8 @@ class ClientAPIKey(APIKey):
     rate = models.BigIntegerField(
         default=50, help_text="Default throttle rate for requests per hour."
     )
-    expiry_time = models.CharField(choices=ExpireWhen.choices, max_length=2)
+    expiry_time = models.CharField(
+        default=timezone.now, choices=ExpireWhen.choices, max_length=2)
 
     class Meta:
         db_table = "clients_apikey"
