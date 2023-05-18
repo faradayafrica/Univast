@@ -24,9 +24,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    
     # Apps
     "academia",
     "web",
+    
     # third party packages
     "rest_framework",
     "drf_yasg",
