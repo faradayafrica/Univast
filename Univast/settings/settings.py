@@ -96,9 +96,6 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         "academia.throttling.APIKeyThrottling"
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        "rate": "500/hour"
-    }
 }
 
 # Password validation

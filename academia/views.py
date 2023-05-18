@@ -8,9 +8,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.request import Request
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 from rest_framework_api_key.permissions import HasAPIKey
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 
 # Own imports
 from academia.models import Country, School, Faculty, Department
@@ -20,6 +18,7 @@ from academia.serializers import (
     FacultySerializer,
     DepartmentSerializer,
 )
+from academia.throttling import APIKeyThrottling
 from academia.selectors import get_country, get_school, get_faculty
 
 # Third Party Imports
@@ -33,24 +32,28 @@ def home(request):
 
 class GetObjectListAPIView(generics.ListAPIView):
     permission_classes = (HasAPIKey,)
-    throttle_scope = "rate"
-    
+    throttle_classes = [APIKeyThrottling]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.throttle_classes[0].request = request
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request: Request) -> Response:
         """
         This API retrieves an object.
         """
-        
-        object_type = request.GET.get('type')
-        object_id = request.GET.get('fid')
+
+        object_type = request.GET.get("type")
+        object_id = request.GET.get("fid")
 
         if object_type not in ("school", "faculty", "department"):
             response = success_response(
                 status=False,
                 message="type must either be school, faculty or department",
-                data={}
+                data={},
             )
             return Response(data=response, status=status.HTTP_400_BAD_REQUEST)
-        
+
         if object_type == "school":
             school = get_object_or_404(School, id=object_id)
             serializer = SchoolSerializer(school, many=False)
@@ -69,43 +72,6 @@ class GetObjectListAPIView(generics.ListAPIView):
             data=serializer.data,
         )
         return Response(data=response, status=status.HTTP_200_OK)
-        
-
-@permission_classes((HasAPIKey,))
-def get_object(request):
-    object_type = request.GET.get('type')
-    object_id = request.GET.get('fid')
-    
-    print("object_type: " + object_type)
-    print("object_id: " + object_id)
-
-    if object_type not in ("school", "faculty", "department"):
-        print("Error: " + f"object type by name {object_type} is not recognised.")
-        # response = success_response(
-        #     status=False,
-        #     message="Retrieved all schools from cache!",
-        #     data={}
-        # )
-        return Response(data="Errorrrr", status=status.HTTP_400_BAD_REQUEST)
-
-    # if object_type == "school":
-    #     school = get_object_or_404(School, id=object_id)
-    #     serializer = SchoolSerializer(school, many=False)
-
-    # elif object_type == "faculty":
-    #     faculty = get_object_or_404(Faculty, id=object_id)
-    #     serializer = FacultySerializer(faculty, many=False)
-
-    # elif object_type == "department":
-    #     department = get_object_or_404(Department, id=object_id)
-    #     serializer = DepartmentSerializer(department, many=False)
-
-    # response = success_response(
-    #     status=True,
-    #     message="Retrieved updated Fid",
-    #     data=serializer.data,
-    # )
-    # return Response(data=response, status=status.HTTP_200_OK, format='json')
 
 
 # Cutom 404 handler
@@ -131,8 +97,12 @@ def custom_bad_request_view(request, exception=None):
 class CountryListAPIView(generics.ListAPIView):
     serializer_class = CountrySerializer
     permission_classes = (HasAPIKey,)
-    throttle_scope = "rate"
+    throttle_classes = [APIKeyThrottling]
     queryset = Country.objects.only("id", "name", "country_code")
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.throttle_classes[0].request = request
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: Request) -> Response:
         """
@@ -140,12 +110,10 @@ class CountryListAPIView(generics.ListAPIView):
         """
 
         # Check if the data is already cached
-        key = f"countries_in_univast"
+        key = "countries_in_univast"
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all schools from cache!",
@@ -171,6 +139,7 @@ class CountryListAPIView(generics.ListAPIView):
 class SchoolListAPIView(generics.ListAPIView):
     serializer_class = SchoolSerializer
     permission_classes = (HasAPIKey,)
+    throttle_classes = [APIKeyThrottling]
     throttle_scope = "rate"
     queryset = School.objects.only(
         "id",
@@ -183,6 +152,10 @@ class SchoolListAPIView(generics.ListAPIView):
         "founded",
         "address",
     ).filter(unlisted=False)
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.throttle_classes[0].request = request
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: Request, country_code: str) -> Response:
         """
@@ -197,8 +170,6 @@ class SchoolListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all schools from cache!",
@@ -233,8 +204,12 @@ class SchoolListAPIView(generics.ListAPIView):
 class SchoolFacultyListAPIView(generics.ListAPIView):
     serializer_class = FacultySerializer
     permission_classes = (HasAPIKey,)
-    throttle_scope = "rate"
+    throttle_classes = [APIKeyThrottling]
     queryset = Faculty.objects.only("id", "name")
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.throttle_classes[0].request = request
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: Request, school_code: str) -> Response:
         """
@@ -250,8 +225,6 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all faculties from cache!",
@@ -283,10 +256,14 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
 class DepartmentListAPIView(generics.ListAPIView):
     serializer_class = DepartmentSerializer
     permission_classes = (HasAPIKey,)
-    throttle_scope = "rate"
+    throttle_classes = [APIKeyThrottling]
     queryset = Department.objects.prefetch_related("degree").only(
         "id", "name", "degree", "duration"
     )
+
+    def dispatch(self, request, *args, **kwargs):
+        self.throttle_classes[0].request = request
+        return super().dispatch(request, *args, **kwargs)
 
     def get(
         self, request: Request, school_code: str, faculty_name: str
@@ -307,8 +284,6 @@ class DepartmentListAPIView(generics.ListAPIView):
         data = cache.get(key)
 
         if data is not None:
-            # If data is cached, return it
-
             response = success_response(
                 status=True,
                 message="Retrieved all departments from cache!",
