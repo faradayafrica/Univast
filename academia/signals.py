@@ -4,7 +4,6 @@ import requests
 # Django imports
 from django.conf import settings
 from django.core.cache import cache
-from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 # Local imports
@@ -26,7 +25,6 @@ def webhook_clear_school_cache(sender, instance, **kwargs):
         cache.delete(cache_key)
 
     # Dispatch webhook
-    print("Dispatching webhook")
     dispatch_webhook.delay("school", instance.id)
  
 def webhook_clear_faculty_cache(sender, instance, **kwargs):
