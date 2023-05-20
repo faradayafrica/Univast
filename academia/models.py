@@ -1,6 +1,5 @@
 # Stdlib Imports
 import uuid
-from django.utils import timezone
 
 # Django Imports
 from django.db import models
@@ -52,32 +51,27 @@ class ClientAPIKey(APIKey):
     Fields:
         - *: inherits apikey from rest_framework_api_key
         - client (o2o): A one-to-one relationship to the client.
+        - scope (str): The unique name that'll be used to rate api key
         - rate (bigint): The number of requests to be made per hour.
-        - expiry_time (str): The expiry time for the key to expire.
     """
-
-    class ExpireWhen(models.Choices):
-        THIRTY_DAYS = "30"
-        SIXTY_DAYS = "60"
-        NINTY_DAYS = "90"
 
     client = models.OneToOneField(
         Client, on_delete=models.CASCADE, related_name="api_key"
     )
-    scope = models.SlugField(unique=True, max_length=100)
-    rate = models.BigIntegerField(
-        default=50, help_text="Default throttle rate for requests per hour."
+    scope = models.SlugField(
+        unique=True, max_length=100, blank=True, editable=False
     )
-    expiry_time = models.CharField(
-        default=timezone.now, choices=ExpireWhen.choices, max_length=2)
-
+    rate = models.BigIntegerField(
+        default=60, help_text="Default throttle rate for requests per hour."
+    )
+    
     class Meta:
         db_table = "clients_apikey"
         verbose_name = "Clients API Key"
         verbose_name_plural = "Clients API Key(s)"
 
     def __str__(self) -> str:
-        return f"Client API Key: {self.client_id}"
+        return f"Client API Key: {self.name}"
 
 
 class Country(models.Model):

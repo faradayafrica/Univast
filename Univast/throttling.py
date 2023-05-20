@@ -27,6 +27,20 @@ class APIKeyThrottling(SimpleRateThrottle):
         except ClientAPIKey.DoesNotExist:
             raise NotFound({"message": "Api-Key does not exist!"})
         return client_apikey.scope, client_apikey.rate
+    
+    def allow_request(self, request: HttpRequest, view):
+        # Exclude specific paths from throttling
+        excluded_paths = [
+            '/api/auth/docs/',  # Add any other paths to exclude here
+        ]
+
+        # Check if the request path is in the excluded paths
+        for path in excluded_paths:
+            if request.path.startswith(path):
+                return True
+
+        # Perform the default throttling check for other paths
+        return super().allow_request(request, view)
 
     def get_cache_key(self, request: HttpRequest, view):
         authorization = request.headers.get("Authorization", None)
@@ -37,15 +51,14 @@ class APIKeyThrottling(SimpleRateThrottle):
         client_scope, _ = self.get_client_scope_and_rate(api_key)
 
         self.scope = client_scope
-        self.get_rate()
+        self.get_rate(request)
 
         return self.cache_format % {
             "scope": client_scope,
             "ident": api_key,
         }
 
-    def get_rate(self):
-        request = self.request
+    def get_rate(self, request=None):
         if request is None:
             return None
 

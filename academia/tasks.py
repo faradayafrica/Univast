@@ -22,3 +22,4 @@ def dispatch_webhook(type, fid):
                     'type': type
                   }
         response_hook = requests.post(webhook_url, data=payload)
+        print("RESPONSE FROM WEBHOOK: ", response_hook.text)

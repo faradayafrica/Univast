@@ -137,3 +137,6 @@ dmypy.json
 
 # Cache
 cache/
+
+# Database
+dump.rdb
