@@ -94,7 +94,7 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (),
     'DEFAULT_THROTTLE_CLASSES': [
-        "academia.throttling.APIKeyThrottling"
+        "Univast.throttling.APIKeyThrottling"
     ],
 }
 

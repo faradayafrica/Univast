@@ -18,7 +18,7 @@ from academia.serializers import (
     FacultySerializer,
     DepartmentSerializer,
 )
-from academia.throttling import APIKeyThrottling
+from Univast.throttling import APIKeyThrottling
 from academia.selectors import get_country, get_school, get_faculty
 
 # Third Party Imports
