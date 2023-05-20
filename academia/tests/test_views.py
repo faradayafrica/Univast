@@ -31,19 +31,16 @@ class BaseTestCase(object):
         return Country.objects.bulk_create(
             [
                 Country(
-                    id=randint(0, 999),
                     name="Argentina",
                     continent="South America",
                     country_code="ARG",
                 ),
                 Country(
-                    id=randint(0, 999),
                     name="London",
                     continent="Europe",
                     country_code="UK",
                 ),
                 Country(
-                    id=randint(0, 999),
                     name="Nigeria",
                     continent="Africa",
                     country_code="NG",
@@ -143,11 +140,10 @@ class BaseTestCase(object):
             is_verified=True,
             client_type=Client.ClientTypes.ORGANISATION,
         )[0]
-        expiry_date = datetime.now() + timedelta(days=int("30"))
+        expiry_date = datetime.now() + timedelta(days=30)
         _, api_key = ClientAPIKey.objects.create_key(
             name="univast-apikey",
             expiry_date=expiry_date,
-            expiry_time=ClientAPIKey.ExpireWhen.THIRTY_DAYS,
             client=client,
             scope=client.name,
             rate=30,

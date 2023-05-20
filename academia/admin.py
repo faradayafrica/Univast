@@ -1,9 +1,10 @@
 # Stdlib Imports
-from typing import Any, Union
+from typing import Any
 
 # Django Imports
 from django.contrib import admin
-from django.http.request import HttpRequest
+from django.contrib import messages
+from django.utils.text import slugify
 
 # Own Imports
 from academia.models import (
@@ -96,30 +97,47 @@ class AdminClient(admin.ModelAdmin):
 
 class AdminClientAPIKey(admin.ModelAdmin):
     list_display: list = [
+        "name",
         "client",
         "rate",
         "prefix",
-        "name",
         "expiry_date",
-        "expiry_time",
     ]
 
-    def has_add_permission(self, request, obj=None):
-        return False
+    def save_model(
+        self, request: Any, obj: Any, form: Any, change: Any
+    ) -> None:
+        """
+        Override the default save method to manually create client apikey.
+        """
 
-    def has_change_permission(
-        self, request: HttpRequest, obj: Union[Any, None] = ...
-    ) -> bool:
-        return False
+        name = form.cleaned_data["name"]
+        revoked = form.cleaned_data["revoked"]
+        client = form.cleaned_data["client"]
+        rate = form.cleaned_data["rate"]
+        expires = form.cleaned_data["expiry_date"]
 
-    def has_delete_permission(
-        self, request: HttpRequest, obj: Union[Any, None] = ...
-    ) -> bool:
-        return (
-            super().has_delete_permission(request, obj)
-            if request.user.is_superuser
-            else False
-        )
+        if not change:
+            _, apikey = ClientAPIKey.objects.create_key(
+                name=name,
+                client=client,
+                scope=slugify(name),
+                rate=rate,
+                expiry_date=expires,
+            )
+
+            # show success message to admin user
+            messages.success(
+                request, f"ApiKey created, kindly copy: {apikey}"
+            )
+
+        client_apikey = ClientAPIKey.objects.get(scope=slugify(name))
+        client_apikey.revoked = revoked
+        client_apikey.name = name
+        client_apikey.expiry_date = expires
+        client_apikey.client = client
+        client_apikey.rate = rate
+        client_apikey.save()
 
 
 admin.site.register(Country, AdminCountry)
