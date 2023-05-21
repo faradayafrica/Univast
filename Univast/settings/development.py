@@ -11,14 +11,6 @@ DATABASES = {
     }
 }
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         "LOCATION": config("REDIS_URL"),  # in the format of redis://:password@host:port/db_number # noqa
-#         "TIMEOUT": None
-#     }
-# }
-
 # SSL Definition
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = False
