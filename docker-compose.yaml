@@ -10,28 +10,68 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        command: sh -c "python manage.py runserver"
-        # volumes:
-        #     - .:/univast
+        command: sh -c "python manage.py migrate --noinput && gunicorn --bind=0.0.0.0:9000 --timeout 600 Univast.wsgi --reload"
+        volumes:
+            - .:/univast
         ports:
-            - 8000:8000
-        # expose:
-        #     - "80"
+            - 9000:9000
+        environment:
+            - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+            - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
         env_file:
-          - ./.env
+            - ./.env
         # depends_on:
-        #   - db
+        #     - db
 
     # Postgres Database container
-#     db:
-#       container_name: "Univast_postgres"
-#       image: 'postgres:13.0-alpine'
-#       volumes:
-#         - postgres_data:/var/lib/postgresql/data/
-#       environment:
-#         - POSTGRES_USER=${UNIVAST_DB_USER}
-#         - POSTGRES_PASSWORD=${UNIVAST_DB_PASSWORD}
-#         - POSTGRES_DB=${UNIVAST_DB_NAME}
+    # db:
+    #   container_name: "Univast_postgres_database"
+    #   image: 'postgres:13.0-alpine'
+    #   volumes:
+    #     - postgres_data:/var/lib/postgresql/data/
+    #   environment:
+    #     - POSTGRES_USER=${UNIVAST_DB_USER}
+    #     - POSTGRES_PASSWORD=${UNIVAST_DB_PASSWORD}
+    #     - POSTGRES_DB=${UNIVAST_DB_NAME}
 
-# volumes:
-#   postgres_data:
+    # Redis container
+    # redis:
+    #     container_name: "Univast_redis"
+    #     image: 'redis:7-alpine'
+    #     ports:
+    #     - 6376:6379
+
+    # Celery worker container
+    celery_worker:
+        container_name: "Univast_celery_worker"
+        restart: always
+        build: .
+        command: celery -A Univast worker -l INFO --loglevel=info
+        image: faradayapi_celery_worker
+        volumes:
+        - .:/univast
+        env_file:
+        - ./.env
+        depends_on:
+        # - db
+        # - redis
+        - web
+
+    flower:
+        container_name: "Univast_flower"
+        build:
+            context: .
+        command: celery -A Univast --broker=${CELERY_BROKER_URL} flower --port=5557 --basic_auth=${FLOWER_AUTH_USER}:${FLOWER_AUTH_PASSWORD}
+        volumes:
+        - .:/univast
+        env_file:
+        - ./.env
+        ports:
+        - 5557:5557
+        depends_on:
+        # - db
+        # - redis
+        - web
+
+volumes:
+  postgres_data:

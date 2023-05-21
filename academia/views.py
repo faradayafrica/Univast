@@ -99,7 +99,7 @@ class CountryListAPIView(generics.ListAPIView):
     permission_classes = (HasAPIKey,)
     throttle_classes = [APIKeyThrottling]
     queryset = Country.objects.only("id", "name", "country_code")
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)
@@ -152,21 +152,21 @@ class SchoolListAPIView(generics.ListAPIView):
         "founded",
         "address",
     ).filter(unlisted=False)
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request: Request, country_code: str) -> Response:
+    def get(self, request: Request, country_id: str) -> Response:
         """
         This API view retrieves the list of schools.
 
-        :param country_code: the code of country you wish to
+        :param country_id: the code of country you wish to
             get the list of available schools in.
-        \n:type country_code: str
+        \n:type country_id: str
         """
         # Check if the data is already cached
-        key = f"schools_{country_code}"
+        key = f"schools_{country_id}"
         data = cache.get(key)
 
         if data is not None:
@@ -179,7 +179,7 @@ class SchoolListAPIView(generics.ListAPIView):
             return Response(data=response, status=status.HTTP_200_OK)
 
         # If data is not cached, fetch it from the queryset
-        schools = self.get_queryset(country_code.upper())
+        schools = self.get_queryset(country_id)
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
@@ -194,10 +194,10 @@ class SchoolListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str) -> QuerySet[School]:
-        country_code = get_country(code)
+    def get_queryset(self, country_id: str) -> QuerySet[School]:
+        country_code = get_country(country_id)
         return self.queryset.filter(
-            country__country_code=country_code
+            country_id=country_id
         ).order_by("name")
 
 
@@ -206,22 +206,22 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
     permission_classes = (HasAPIKey,)
     throttle_classes = [APIKeyThrottling]
     queryset = Faculty.objects.only("id", "name")
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request: Request, school_code: str) -> Response:
+    def get(self, request: Request, school_id: str) -> Response:
         """
         This API view retrieves the list of faculties in a school.
 
-        :param school_code: the name of school you wish to
+        :param school_id: the id of school you wish to
             get the list of available faculties in.\n
-        \n:type school_code: str\n
+        \n:type school_id: str\n
         """
 
         # Check if the data is already cached
-        key = f"faculties_{school_code}"
+        key = f"faculties_{school_id}"
         data = cache.get(key)
 
         if data is not None:
@@ -233,7 +233,7 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
 
             return Response(data=response, status=status.HTTP_200_OK)
 
-        faculties = self.get_queryset(school_code)
+        faculties = self.get_queryset(school_id)
         serializer = self.serializer_class(
             faculties, many=True, context={"request": request}
         )
@@ -248,9 +248,9 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str) -> QuerySet[Faculty]:
-        school_code = get_school(code)
-        return self.queryset.filter(school__code=school_code).order_by("name")
+    def get_queryset(self, school_id: str) -> QuerySet[Faculty]:
+        school_code = get_school(school_id)
+        return self.queryset.filter(school_id=school_id).order_by("name")
 
 
 class DepartmentListAPIView(generics.ListAPIView):
@@ -266,21 +266,21 @@ class DepartmentListAPIView(generics.ListAPIView):
         return super().dispatch(request, *args, **kwargs)
 
     def get(
-        self, request: Request, school_code: str, faculty_name: str
+        self, request: Request, school_id: str, faculty_id: str
     ) -> Response:
         """
         This API view retrieves the list of departments in a school.
 
-        :param school_code: the school (code) you wish to
+        :param school_id: the school (id) you wish to
             get the list of available departments in.
-        \n:type school_code: str\n
-        \n:param faculty_name: the name of faculty you wish
+        \n:type school_id: str\n
+        \n:param faculty_id: the id of faculty you wish
             to get the list of available departments in.
-        \n:type faculty_name: str\n
+        \n:type faculty_id: str\n
         """
 
         # Check if the data is already cached
-        key = f"departments_{school_code}_{faculty_name}"
+        key = f"departments_{school_id}_{faculty_id}"
         data = cache.get(key)
 
         if data is not None:
@@ -292,7 +292,7 @@ class DepartmentListAPIView(generics.ListAPIView):
 
             return Response(data=response, status=status.HTTP_200_OK)
 
-        schools = self.get_queryset(school_code, faculty_name)
+        schools = self.get_queryset(school_id, faculty_id)
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
@@ -307,9 +307,9 @@ class DepartmentListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str, faculty: str) -> QuerySet[Department]:
-        school_code = get_school(code)
-        faculty_name = get_faculty(faculty)
+    def get_queryset(self, school_id: str, faculty_id: str) -> QuerySet[Department]:
+        school_code = get_school(school_id)
+        faculty_name = get_faculty(faculty_id)
         return self.queryset.filter(
-            school__code=school_code, faculty__name=faculty_name
+            school_id=school_id, faculty_id=faculty_id
         ).order_by("name")

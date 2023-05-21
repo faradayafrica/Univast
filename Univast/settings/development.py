@@ -11,23 +11,6 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        "LOCATION": config("REDIS_URL"),  # in the format of redis://:password@host:port/db_number # noqa
-        "TIMEOUT": None
-    }
-}
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [config("REDIS_URL")],  # redis host must be in the format of redis://:password@host:port/db_number # noqa
-        },
-    },
-}
-
 # SSL Definition
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = False
