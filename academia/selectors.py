@@ -22,7 +22,7 @@ def get_school(code: str) -> str:
     return code
 
 
-def get_country(code: str) -> str:
+def get_country(country_id: str) -> str:
     """
     This function returns the country code if it exists,
     otherwise it raises a NotFound exception.
@@ -33,9 +33,9 @@ def get_country(code: str) -> str:
     :return: The country code.
     """
 
-    if not Country.objects.filter(country_code=code).exists():
-        raise exceptions.NotFound({"message": "Country not found!"})
-    return code
+    if not Country.objects.filter(id=country_id).exists():
+        raise exceptions.NotFound({"message": f"Country not by id {country_id} not found!"})
+    return country_id
 
 
 def get_faculty(name: str) -> str:

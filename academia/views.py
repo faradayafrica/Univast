@@ -99,7 +99,7 @@ class CountryListAPIView(generics.ListAPIView):
     permission_classes = (HasAPIKey,)
     throttle_classes = [APIKeyThrottling]
     queryset = Country.objects.only("id", "name", "country_code")
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)
@@ -152,12 +152,12 @@ class SchoolListAPIView(generics.ListAPIView):
         "founded",
         "address",
     ).filter(unlisted=False)
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request: Request, country_code: str) -> Response:
+    def get(self, request: Request, country_id: str) -> Response:
         """
         This API view retrieves the list of schools.
 
@@ -166,7 +166,7 @@ class SchoolListAPIView(generics.ListAPIView):
         \n:type country_code: str
         """
         # Check if the data is already cached
-        key = f"schools_{country_code}"
+        key = f"schools_{country_id}"
         data = cache.get(key)
 
         if data is not None:
@@ -179,7 +179,7 @@ class SchoolListAPIView(generics.ListAPIView):
             return Response(data=response, status=status.HTTP_200_OK)
 
         # If data is not cached, fetch it from the queryset
-        schools = self.get_queryset(country_code.upper())
+        schools = self.get_queryset(country_id)
         serializer = self.serializer_class(
             schools, many=True, context={"request": request}
         )
@@ -194,10 +194,10 @@ class SchoolListAPIView(generics.ListAPIView):
         )
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_queryset(self, code: str) -> QuerySet[School]:
-        country_code = get_country(code)
+    def get_queryset(self, country_id: str) -> QuerySet[School]:
+        country_code = get_country(country_id)
         return self.queryset.filter(
-            country__country_code=country_code
+            country__country_id=country_code
         ).order_by("name")
 
 
@@ -206,7 +206,7 @@ class SchoolFacultyListAPIView(generics.ListAPIView):
     permission_classes = (HasAPIKey,)
     throttle_classes = [APIKeyThrottling]
     queryset = Faculty.objects.only("id", "name")
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.throttle_classes[0].request = request
         return super().dispatch(request, *args, **kwargs)

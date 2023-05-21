@@ -18,17 +18,17 @@ urlpatterns = [
     path("fetch", GetObjectListAPIView.as_view(), name="get_object"),
     path("countries", CountryListAPIView.as_view(), name="get_countries"),
     path(
-        "schools/<str:country_code>",
+        "schools/<str:country_id>",
         SchoolListAPIView.as_view(),
         name="get_schools",
     ),
     path(
-        "faculties/<str:school_code>",
+        "faculties/<str:school_id>",
         SchoolFacultyListAPIView.as_view(),
         name="get_faculties",
     ),
     path(
-        "departments/<str:school_code>/<str:faculty_name>",
+        "departments/<str:school_id>/<str:faculty_id>",
         DepartmentListAPIView.as_view(),
         name="get_departments",
     ),
