@@ -10,7 +10,7 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        command: sh -c "python manage.py migrate --noinput && celery -A Univast worker -l info & gunicorn --bind=0.0.0.0:9000 --timeout 600 Univast.wsgi --reload"
+        command: sh -c "python manage.py migrate --noinput && gunicorn --bind=0.0.0.0:9000 --timeout 600 Univast.wsgi --reload"
         volumes:
             - .:/univast
         ports:
@@ -61,7 +61,7 @@ services:
         container_name: "Univast_flower"
         build:
             context: .
-        command: celery -A Univast --broker=${CELERY_BROKER_URL} flower --port=5557
+        command: celery -A Univast --broker=${CELERY_BROKER_URL} flower --port=5557 --basic_auth=${FLOWER_AUTH_USER}:${FLOWER_AUTH_PASSWORD}
         volumes:
         - .:/univast
         env_file:
