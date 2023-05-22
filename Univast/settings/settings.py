@@ -88,6 +88,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = [
     "https://univast.faraday.africa",
     "https://univast.azurewebsites.net",
+    "https://univast-staging.azurewebsites.net",
 ]
 
 REST_FRAMEWORK = {
