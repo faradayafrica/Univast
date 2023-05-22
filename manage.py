@@ -12,6 +12,8 @@ def main():
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Univast.settings.development')
     elif config('DJANGO_DEVELOPMENT') == 'prod':
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Univast.settings.production')
+    elif config('DJANGO_DEVELOPMENT') == 'staging':
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Univast.settings.staging')
     elif config('DJANGO_DEVELOPMENT') == 'GITHUB':
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Univast.settings.workflow')
     else:
