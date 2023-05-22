@@ -104,6 +104,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'univast(staging)'
+          app-name: 'univast'
           slot-name: 'staging'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B5595EB79FE844049F2F917E0901AA27 }}
