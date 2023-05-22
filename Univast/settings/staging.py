@@ -1,6 +1,6 @@
 from Univast.settings.settings import *  # noqa
 
-DEBUG = False
+DEBUG = True
 
 SECRET_KEY = config("SECRET_KEY")  # noqa
 
