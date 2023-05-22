@@ -2,7 +2,7 @@ name: Univast CI
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "staging"]
 
 env:
   DJANGO_ALLOWED_HOSTS: "0.0.0.0,127.0.0.1"
