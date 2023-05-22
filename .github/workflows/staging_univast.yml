@@ -1,0 +1,109 @@
+name: Build and deploy Univast to Azure Web App - Staging Server
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+env:
+  DJANGO_ALLOWED_HOSTS: "0.0.0.0,127.0.0.1"
+  UNIVAST_DB_NAME: "value"
+  UNIVAST_DB_USER: "value"
+  UNIVAST_DB_PASSWORD: "value"
+  UNIVAST_DB_HOST: "value"
+  UNIVAST_DB_PORT: "value"
+  DJANGO_DEVELOPMENT: "dev"
+  AIRTABLE_API_KEY: "value"
+  AIRTABLE_BASEID: "value"
+  AIRTABLE_TABLEID: "value"
+  SECRET_KEY: "something-secretive"
+  CLOUDINARY_CLOUD_NAME: "value"
+  CLOUDINARY_API_KEY: "value"
+  CLOUDINARY_API_SECRET: "value"
+  RECIEVER_WEBHOOK_API_URLS: "http://127.0.0.1 http://127.0.0.1"
+  REDIS_URL: "redis://localhost:6379/0"
+  CELERY_BROKER_URL: "redis://localhost:6379/0"
+  CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: univast_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+      
+      redis:
+          image: redis
+          options: >-
+            --health-cmd "redis-cli ping"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.9'
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run migrations
+        run: python manage.py migrate
+        
+      - name: Run Tests
+        run: |
+          python manage.py test
+
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-app
+          path: |
+            . 
+            !venv/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'staging'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: python-app
+          path: .
+
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: 'univast(staging)'
+          slot-name: 'staging'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_f0643144232e41e9ba468b1bcd5bd7d4 }}
