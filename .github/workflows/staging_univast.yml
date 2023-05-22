@@ -106,4 +106,4 @@ jobs:
         with:
           app-name: 'univast(staging)'
           slot-name: 'staging'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_f0643144232e41e9ba468b1bcd5bd7d4 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B5595EB79FE844049F2F917E0901AA27 }}
