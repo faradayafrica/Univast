@@ -43,7 +43,6 @@ class Client(models.Model):
     def __str__(self) -> str:
         return f"Client: {self.name}"
 
-
 class ClientAPIKey(APIKey):
     """
     Defines the clients_apikey table in the database.
@@ -72,7 +71,6 @@ class ClientAPIKey(APIKey):
 
     def __str__(self) -> str:
         return f"Client API Key: {self.name}"
-
 
 class Country(models.Model):
     """
@@ -128,6 +126,12 @@ class Country(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class AdmissionRequirement(models.Model):
+    program = models.ForeignKey('Programme', on_delete=models.CASCADE)
+    requirement = models.CharField(max_length=10000)
+
+    def __str__(self):
+        return f"{self.program} Requirement"
 
 class School(models.Model):
     """
@@ -246,6 +250,11 @@ class School(models.Model):
         related_name="child_departments",
         editable=False,
     )
+    ranking = models.ManyToManyField(
+        'Ranking', 
+        blank=True, 
+        related_name='school_ranking',
+    )
 
     class Meta:
         verbose_name_plural = "Schools"
@@ -269,6 +278,16 @@ class School(models.Model):
     def __str__(self) -> str:
         return self.name + " - " + self.country.name
 
+class Programme(models.Model):
+    name = models.CharField(max_length=200)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    description = models.TextField()
+    duration = models.PositiveIntegerField()  # Duration in years
+    degree_type = models.CharField(max_length=100)
+    prerequisites = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 class Faculty(models.Model):
     """
@@ -316,7 +335,6 @@ class Faculty(models.Model):
 
     def __str__(self):
         return str(self.name) + " - " + str(self.school)
-
 
 class Department(models.Model):
     """
@@ -404,7 +422,6 @@ class Department(models.Model):
     def __str__(self) -> str:
         return self.name + " - " + self.faculty.name + " - " + self.school.name
 
-
 class Degree(models.Model):
     """
     Defines the schema for academia_degree table in the database.
@@ -436,3 +453,26 @@ class Degree(models.Model):
 
     def __str__(self) -> str:
         return self.name + " - " + self.code
+
+class AccreditationBody(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Accreditation(models.Model):
+    institution = models.ForeignKey(School, on_delete=models.CASCADE)
+    body = models.ForeignKey(AccreditationBody, on_delete=models.CASCADE)
+    date_issued = models.DateField()
+
+    def __str__(self):
+        return f"{self.institution} - {self.body}"
+
+class Ranking(models.Model):
+    institution = models.ForeignKey(School, on_delete=models.CASCADE, related_name='rankings')
+    rank = models.PositiveIntegerField()
+    organization = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"{self.institution} - {self.rank}"
