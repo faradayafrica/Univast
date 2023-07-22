@@ -313,3 +313,12 @@ class DepartmentListAPIView(generics.ListAPIView):
         return self.queryset.filter(
             school_id=school_id, faculty_id=faculty_id
         ).order_by("name")
+
+def clear_and_reset_cache(request):
+    cache.clear()
+    response = success_response(
+    status=True,
+    message="Cleared all Cache!",
+    data="",
+    )
+    return Response(data=response, status=status.HTTP_200_OK)

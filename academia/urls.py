@@ -32,4 +32,5 @@ urlpatterns = [
         DepartmentListAPIView.as_view(),
         name="get_departments",
     ),
+    path('clear-cache/', views.clear_and_reset_cache, name='clear_cache'),
 ]
