@@ -4,6 +4,7 @@ from django.urls import path
 # Own Imports
 from academia.views import (
     home,
+    clear_and_reset_cache,
     SchoolListAPIView,
     CountryListAPIView,
     GetObjectListAPIView,
@@ -32,5 +33,5 @@ urlpatterns = [
         DepartmentListAPIView.as_view(),
         name="get_departments",
     ),
-    path('clear-cache/', views.clear_and_reset_cache, name='clear_cache'),
+    path('clear-cache/', clear_and_reset_cache, name='clear_cache'),
 ]
