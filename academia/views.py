@@ -3,11 +3,13 @@ from django.shortcuts import render
 from django.core.cache import cache
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 # Rest Framework Imports
 from rest_framework.request import Request
 from rest_framework import status, generics
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework_api_key.permissions import HasAPIKey
 
 # Own imports
@@ -314,6 +316,8 @@ class DepartmentListAPIView(generics.ListAPIView):
             school_id=school_id, faculty_id=faculty_id
         ).order_by("name")
 
+@csrf_exempt
+@api_view(['POST'])
 def clear_and_reset_cache(request):
     cache.clear()
     response = success_response(
