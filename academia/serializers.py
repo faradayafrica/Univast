@@ -2,8 +2,29 @@
 from rest_framework import serializers
 
 # Own imports
-from academia.models import Country, School, Faculty, Degree, Department
+from academia.models import Country, School, Faculty, Degree, Department, AcademicSession
 
+class AcademicSessionSerializer(serializers.ModelSerializer):
+    """
+    This seriliazer serilizes data for the AcademicSession database model
+    """
+    
+    representation = serializers.SerializerMethodField(
+        read_only=True, help_text="The string representation of this object."
+    )
+    
+    class Meta:
+        model = AcademicSession
+        fields = [
+            "representation",
+            "start_date",
+            "end_date",
+            "is_current_session",
+        ]
+        read_only_fields = fields
+        
+    def get_representation(self, obj):
+        return obj.representation
 
 class DegreeSerializer(serializers.ModelSerializer):
     """
@@ -57,6 +78,9 @@ class SchoolSerializer(serializers.ModelSerializer):
     logo = serializers.SerializerMethodField(
         read_only=True, help_text="The school official logo."
     )
+    current_academic_session = serializers.SerializerMethodField(
+        read_only=True, help_text="The current academic session of the school."
+    )
 
     class Meta:
         model = School
@@ -71,12 +95,20 @@ class SchoolSerializer(serializers.ModelSerializer):
             "owned_by",
             "founded",
             "address",
+            "current_academic_session",
         ]
 
     def get_logo(self, obj: School) -> str:
         """This method gets the logo of the school."""
 
         return obj.logo.url
+    
+    def get_current_academic_session(self, obj: School) -> str:
+        """This method gets the current academic session of the school."""
+
+        session = obj.current_academic_session
+        return AcademicSessionSerializer(session, many=False).data.get("representation")
+        # return session.representation
 
 class MiniSchoolSerializer(serializers.ModelSerializer):
     """
