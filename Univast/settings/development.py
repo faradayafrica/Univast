@@ -25,3 +25,5 @@ cloudinary.config(
     api_key=config("CLOUDINARY_API_KEY"),
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
+
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer',)
