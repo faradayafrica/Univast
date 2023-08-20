@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework_api_key",
     "corsheaders",
     "cloudinary",
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         "Univast.throttling.APIKeyThrottling"
     ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
 }
 
 # Password validation
