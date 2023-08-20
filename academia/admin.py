@@ -8,15 +8,40 @@ from django.utils.text import slugify
 
 # Own Imports
 from academia.models import (
-    Country,
+    Client,
+    Degree,
     School,
     Faculty,
-    Degree,
+    Country,
+    Semester,
+    Programme,
     Department,
-    Client,
     ClientAPIKey,
+    AcademicSession,
+    AcademicCalendar
 )
 
+from academia.forms import AcademicCalendarForm
+
+
+class ProgrammeInline(admin.TabularInline):
+    model = Programme
+    search_fields = ["name__icontains", "school__name__icontains", "parent_programme__name__icontains", "school__country__name__icontains", "school__country__country_code__icontains", "parent_programme__school__name__icontains"]
+    list_filter = ("school", "duration")
+    empty_value_display = "-empty field-"
+    autocomplete_fields = ["school", "parent_programme"]
+    
+class AdminProgramme(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "school",
+        "duration",
+        "degree_type"
+    ]
+    search_fields = ["name__icontains", "school__name__icontains", "parent_programme__name__icontains", "school__country__name__icontains", "school__country__country_code__icontains", "parent_programme__school__name__icontains"]
+    list_filter = ("school", "duration")
+    empty_value_display = "-empty field-"
+    autocomplete_fields = ["school", "parent_programme"]
 
 class AdminCountry(admin.ModelAdmin):
     list_display = (
@@ -31,6 +56,59 @@ class AdminCountry(admin.ModelAdmin):
     )
     list_filter = ("continent",)
     empty_value_display = "-empty field-"
+
+
+class SemesterInline(admin.TabularInline):
+    model = Semester
+    search_fields = ["name__icontains", "school__name__icontains"]
+    list_filter = ("school", "duration")
+    empty_value_display = "-empty field-"
+    autocomplete_fields = ["school"]
+    
+class AcademicSessionInline(admin.TabularInline):
+    model = AcademicSession
+
+class AdminAcademicSession(admin.ModelAdmin):
+    list_display = [
+        "school",
+        "programme",
+        "start_date",
+        "end_date",
+        "is_current_session"
+    ]
+    search_fields = ("name__icontains", "school__name__icontains", "school__country__name__icontains", "school__country__country_code__icontains")
+    empty_value_display = "-empty field-"
+    autocomplete_fields = ["school", "programme"]
+    inlines = [SemesterInline]
+
+class AcademicCalendarAdmin(admin.ModelAdmin):
+    form = AcademicCalendarForm
+    search_fields = [
+        "academic_session__name__icontains",
+        "academic_session__school__name__icontains",
+        "academic_session__school__country__name__icontains",
+        "academic_session__school__country__country_code__icontains",
+        
+        "school__name__icontains",
+        "school__country__name__icontains",
+        "school__country__country_code__icontains",
+        
+        "semester__name__icontains"
+    ]
+
+
+class AdminSemester(admin.ModelAdmin):
+    list_display = ("name", "academic_session", "start_date", "end_date", "is_current_semester")
+    search_fields = [
+        "name__icontains",
+        "academic_session__name__icontains",
+        "academic_session__school__name__icontains",
+        "academic_session__school__country__name__icontains",
+        "academic_session__school__country__country_code__icontains",
+    ]
+    list_filter = ("academic_session", "is_current_semester")
+    empty_value_display = "-empty field-"
+    autocomplete_fields = ["school", "academic_session"]
 
 
 class AdminSchool(admin.ModelAdmin):
@@ -53,6 +131,7 @@ class AdminSchool(admin.ModelAdmin):
     )
     list_filter = ("country", "type", "owned_by", "unlisted")
     empty_value_display = "-empty field-"
+    inlines = [AcademicSessionInline, ProgrammeInline]
 
 
 class AdminFaculty(admin.ModelAdmin):
@@ -60,10 +139,10 @@ class AdminFaculty(admin.ModelAdmin):
         "name",
         "school",
     )
-    search_fields = ["name__icontains", "school__name__icontains"]
-    list_filter = ("school",)
+    search_fields = ["name__icontains", "school__name__icontains", "programme__name__icontains", "programme__school__name__icontains"]
+    list_filter = ("school", "programme")
     empty_value_display = "-empty field-"
-    autocomplete_fields = ["school"]
+    autocomplete_fields = ["school", "programme"]
 
 
 class AdminDepartment(admin.ModelAdmin):
@@ -147,3 +226,7 @@ admin.site.register(Degree, AdminDegree)
 admin.site.register(Department, AdminDepartment)
 admin.site.register(Client, AdminClient)
 admin.site.register(ClientAPIKey, AdminClientAPIKey)
+admin.site.register(AcademicSession, AdminAcademicSession)
+admin.site.register(AcademicCalendar, AcademicCalendarAdmin)
+admin.site.register(Semester, AdminSemester)
+admin.site.register(Programme, AdminProgramme)
