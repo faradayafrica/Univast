@@ -4,8 +4,10 @@ import uuid
 # Django Imports
 from django.db import models
 from django.db.models import Index
+from django.core.exceptions import ValidationError
 
 # Third Party Imports
+from ckeditor.fields import RichTextField
 from cloudinary.models import CloudinaryField
 from rest_framework_api_key.models import APIKey
 
@@ -255,6 +257,12 @@ class School(models.Model):
         blank=True, 
         related_name='school_ranking',
     )
+    
+    academic_sessions = models.ManyToManyField("AcademicSession", blank=True, related_name="all_school_academic_sessions")
+
+    @property
+    def current_academic_session(self):
+        return self.academic_sessions.filter(is_current_session=True, school=self).first()
 
     class Meta:
         verbose_name_plural = "Schools"
@@ -278,16 +286,77 @@ class School(models.Model):
     def __str__(self) -> str:
         return self.name + " - " + self.country.name
 
-class Programme(models.Model):
-    name = models.CharField(max_length=200)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-    description = models.TextField()
-    duration = models.PositiveIntegerField()  # Duration in years
-    degree_type = models.CharField(max_length=100)
-    prerequisites = models.TextField()
+class AcademicSession(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="school_academic_sessions")
+    programme = models.ForeignKey("Programme", on_delete=models.CASCADE, related_name="program_academic_sessions", default="0")
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_current_session = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_current_session:
+            AcademicSession.objects.filter(school=self.school, programme=self.programme).update(is_current_session=False)
+        super(AcademicSession, self).save(*args, **kwargs)
+
+    def clean(self):
+        if self.is_current_session:
+            if AcademicSession.objects.filter(school=self.school, programme=self.programme, is_current_session=True).exclude(pk=self.pk).exists():
+                raise ValidationError("There can be only one current session per school.")
+            
+    @property
+    def representation(self):
+        return f"{self.start_date.year}/{self.end_date.year}"
 
     def __str__(self):
-        return self.name
+        return f"{self.school.name} - {self.start_date.year}-{self.end_date.year}"
+
+class Semester(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="semesters")
+    academic_session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE, related_name='semesters')
+    name = models.CharField(max_length=50)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_current_semester = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.academic_session} - {self.name}"
+    
+    def save(self, *args, **kwargs):
+        if self.is_current_semester:
+            Semester.objects.filter(school=self.school, is_current_semester=True).update(is_current_semester=False)
+        super(Semester, self).save(*args, **kwargs)
+    
+    def clean(self):
+        if self.is_current_semester:
+            if Semester.objects.filter(school=self.school, is_current_semester=True).exclude(pk=self.pk).exists():
+                raise ValidationError("There can be only one current semester per school.")
+
+class AcademicCalendar(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="calendar_events", null=False, blank=False)
+    academic_session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE, related_name='calendar_events', null=False, blank=False)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='calendar_events', null=False, blank=False)
+    start_date = models.DateField(null=False, blank=False)
+    end_date = models.DateField(null=True, blank=True)
+    event_description = RichTextField(null=True, blank=True)
+    event_title = models.CharField(max_length=200, null=False, blank=False)
+
+    def __str__(self):
+        return f"{self.event_title} for {self.academic_session} - {self.event_date}"
+
+    class Meta:
+        ordering = ['-end_date']
+
+class Programme(models.Model):
+    parent_programme = models.ForeignKey("self", on_delete=models.CASCADE, related_name="child_programmes", null=True, blank=True)
+    name = models.CharField(max_length=200)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    description = RichTextField(null=True, blank=True)
+    duration = models.PositiveIntegerField()  # Duration in years
+    degree_type = models.CharField(max_length=100)
+    prerequisites = RichTextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name + " - " + self.school.name
 
 class Faculty(models.Model):
     """
@@ -325,6 +394,12 @@ class Faculty(models.Model):
         blank=True,
         related_name="faculty_departments",
         editable=False,
+    )
+    programme = models.ManyToManyField(
+        "Programme",
+        blank=True,
+        related_name="faculty_programmes",
+        editable=True,
     )
 
     class Meta:
@@ -405,6 +480,12 @@ class Department(models.Model):
         null=False,
         blank=True,
         help_text="The associated department code, like ECE",
+    )
+    programme = models.ManyToManyField(
+        "Programme",
+        blank=True,
+        related_name="department_programmes",
+        editable=True,
     )
 
     class Meta:
