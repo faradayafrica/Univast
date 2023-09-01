@@ -503,6 +503,47 @@ class Department(models.Model):
     def __str__(self) -> str:
         return self.name + " - " + self.faculty.name + " - " + self.school.name
 
+class Course(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=False, blank=False)
+    name = models.CharField(max_length=200)
+    code = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    def clean(self):
+        existing_course_with_same_code = Course.objects.filter(code=self.code, school=self.school).exclude(pk=self.pk)
+        if existing_course_with_same_code.exists():
+            raise ValidationError("A course with the same code already exists.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Course, self).save(*args, **kwargs)
+
+class LectureTimetable(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    academic_session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    level = models.PositiveIntegerField(choices=Department.CHOICES)
+    
+    DAY_CHOICES = (
+        ("Monday", "Monday"),
+        ("Tuesday", "Tuesday"),
+        ("Wednesday", "Wednesday"),
+        ("Thursday", "Thursday"),
+        ("Friday", "Friday"),
+        ("Saturday", "Saturday"),
+        ("Sunday", "Sunday"),
+    )
+
+    days = models.CharField(max_length=20, choices=DAY_CHOICES)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    courses = models.ManyToManyField(Course, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Lecture Timetables"
+
 class Degree(models.Model):
     """
     Defines the schema for academia_degree table in the database.
