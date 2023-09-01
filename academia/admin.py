@@ -11,6 +11,7 @@ from academia.models import (
     Client,
     Degree,
     School,
+    Course,
     Faculty,
     Country,
     Semester,
@@ -18,18 +19,11 @@ from academia.models import (
     Department,
     ClientAPIKey,
     AcademicSession,
-    AcademicCalendar
+    AcademicCalendar,
+    LectureTimetable,
 )
 
 from academia.forms import AcademicCalendarForm
-
-
-class ProgrammeInline(admin.TabularInline):
-    model = Programme
-    search_fields = ["name__icontains", "school__name__icontains", "parent_programme__name__icontains", "school__country__name__icontains", "school__country__country_code__icontains", "parent_programme__school__name__icontains"]
-    list_filter = ("school", "duration")
-    empty_value_display = "-empty field-"
-    autocomplete_fields = ["school", "parent_programme"]
     
 class AdminProgramme(admin.ModelAdmin):
     list_display = [
@@ -42,6 +36,7 @@ class AdminProgramme(admin.ModelAdmin):
     list_filter = ("school", "duration")
     empty_value_display = "-empty field-"
     autocomplete_fields = ["school", "parent_programme"]
+
 
 class AdminCountry(admin.ModelAdmin):
     list_display = (
@@ -58,16 +53,6 @@ class AdminCountry(admin.ModelAdmin):
     empty_value_display = "-empty field-"
 
 
-class SemesterInline(admin.TabularInline):
-    model = Semester
-    search_fields = ["name__icontains", "school__name__icontains"]
-    list_filter = ("school", "duration")
-    empty_value_display = "-empty field-"
-    autocomplete_fields = ["school"]
-    
-class AcademicSessionInline(admin.TabularInline):
-    model = AcademicSession
-
 class AdminAcademicSession(admin.ModelAdmin):
     list_display = [
         "school",
@@ -79,7 +64,7 @@ class AdminAcademicSession(admin.ModelAdmin):
     search_fields = ("name__icontains", "school__name__icontains", "school__country__name__icontains", "school__country__country_code__icontains")
     empty_value_display = "-empty field-"
     autocomplete_fields = ["school", "programme"]
-    inlines = [SemesterInline]
+
 
 class AcademicCalendarAdmin(admin.ModelAdmin):
     form = AcademicCalendarForm
@@ -131,7 +116,6 @@ class AdminSchool(admin.ModelAdmin):
     )
     list_filter = ("country", "type", "owned_by", "unlisted")
     empty_value_display = "-empty field-"
-    inlines = [AcademicSessionInline, ProgrammeInline]
 
 
 class AdminFaculty(admin.ModelAdmin):
@@ -139,7 +123,7 @@ class AdminFaculty(admin.ModelAdmin):
         "name",
         "school",
     )
-    search_fields = ["name__icontains", "school__name__icontains", "programme__name__icontains", "programme__school__name__icontains"]
+    search_fields = ["name__icontains", "school__name__icontains", "school__code__icontains", "programme__name__icontains", "programme__school__name__icontains"]
     list_filter = ("school", "programme")
     empty_value_display = "-empty field-"
     autocomplete_fields = ["school", "programme"]
@@ -154,6 +138,7 @@ class AdminDepartment(admin.ModelAdmin):
         "duration__icontains",
         "faculty__name__icontains",
         "school__name__icontains",
+        "school__code__icontains",
         "school__country__name__icontains",
         "school__country__country_code__icontains",
     )
@@ -161,6 +146,20 @@ class AdminDepartment(admin.ModelAdmin):
     empty_value_display = "-empty field-"
     autocomplete_fields = ["school", "faculty", "degree"]
 
+
+class LectureTimetableAdmin(admin.ModelAdmin):
+    list_display = ("department", "academic_session", "semester", "level")
+    empty_value_display = "-empty field-"
+    search_fields = ["department__name__icontains", "academic_session__name__icontains", "semester__name__icontains", "level__icontains"]
+    list_filter = ("department", "academic_session", "semester", "level")
+    autocomplete_fields = ["department", "academic_session", "semester"]
+    
+class AdminCourse(admin.ModelAdmin):
+    list_display = ("school", "name", "code")
+    empty_value_display = "-empty field-"
+    search_fields = ["name__icontains", "school__name__icontains", "school__code__icontains"]
+    list_filter = ("school")
+    autocomplete_fields = ["school"]
 
 class AdminDegree(admin.ModelAdmin):
     list_display = ("name", "code")
@@ -219,14 +218,15 @@ class AdminClientAPIKey(admin.ModelAdmin):
         client_apikey.save()
 
 
-admin.site.register(Country, AdminCountry)
 admin.site.register(School, AdminSchool)
-admin.site.register(Faculty, AdminFaculty)
-admin.site.register(Degree, AdminDegree)
-admin.site.register(Department, AdminDepartment)
 admin.site.register(Client, AdminClient)
+admin.site.register(Degree, AdminDegree)
+admin.site.register(Faculty, AdminFaculty)
+admin.site.register(Country, AdminCountry)
+admin.site.register(Semester, AdminSemester)
+admin.site.register(Programme, AdminProgramme)
+admin.site.register(Department, AdminDepartment)
 admin.site.register(ClientAPIKey, AdminClientAPIKey)
 admin.site.register(AcademicSession, AdminAcademicSession)
 admin.site.register(AcademicCalendar, AcademicCalendarAdmin)
-admin.site.register(Semester, AdminSemester)
-admin.site.register(Programme, AdminProgramme)
+admin.site.register(LectureTimetable, LectureTimetableAdmin)
