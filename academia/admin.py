@@ -150,7 +150,16 @@ class AdminDepartment(admin.ModelAdmin):
 class LectureTimetableAdmin(admin.ModelAdmin):
     list_display = ("department", "academic_session", "semester", "level")
     empty_value_display = "-empty field-"
-    search_fields = ["department__name__icontains", "academic_session__name__icontains", "semester__name__icontains", "level__icontains"]
+    search_fields = [
+        "department__name__icontains", 
+        "academic_session__name__icontains",
+        "programme_school__name__contains",
+        "programme__school__code__contains",
+        "academic_session__school__name__icontains", 
+        "academic_session__school__code__icontains", 
+        "semester__name__icontains", 
+        "level__icontains"
+    ]
     list_filter = ("department", "academic_session", "semester", "level")
     autocomplete_fields = ["department", "academic_session", "semester"]
     
