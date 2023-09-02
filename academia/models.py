@@ -521,10 +521,10 @@ class Course(models.Model):
         super(Course, self).save(*args, **kwargs)
 
 class LectureTimetable(models.Model):
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     academic_session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name="program_timetables", default="0")
     level = models.PositiveIntegerField(choices=Department.CHOICES)
     
     DAY_CHOICES = (

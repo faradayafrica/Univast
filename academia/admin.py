@@ -161,7 +161,7 @@ class LectureTimetableAdmin(admin.ModelAdmin):
         "level__icontains"
     ]
     list_filter = ("department", "academic_session", "semester", "level")
-    autocomplete_fields = ["department", "academic_session", "semester"]
+    autocomplete_fields = ["department", "academic_session", "semester", "programme"]
     
 class AdminCourse(admin.ModelAdmin):
     list_display = ("school", "name", "code")
