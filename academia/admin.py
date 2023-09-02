@@ -230,6 +230,7 @@ class AdminClientAPIKey(admin.ModelAdmin):
 admin.site.register(School, AdminSchool)
 admin.site.register(Client, AdminClient)
 admin.site.register(Degree, AdminDegree)
+admin.site.register(Course, AdminCourse)
 admin.site.register(Faculty, AdminFaculty)
 admin.site.register(Country, AdminCountry)
 admin.site.register(Semester, AdminSemester)
