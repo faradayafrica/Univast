@@ -167,7 +167,7 @@ class AdminCourse(admin.ModelAdmin):
     list_display = ("school", "name", "code")
     empty_value_display = "-empty field-"
     search_fields = ["name__icontains", "school__name__icontains", "school__code__icontains"]
-    list_filter = ("school")
+    list_filter = ("school", "code")
     autocomplete_fields = ["school"]
 
 class AdminDegree(admin.ModelAdmin):
