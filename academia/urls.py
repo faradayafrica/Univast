@@ -9,6 +9,7 @@ from academia.views import (
     CountryListAPIView,
     GetObjectListAPIView,
     DepartmentListAPIView,
+    submit_school_request,
     SchoolFacultyListAPIView,
 )
 
@@ -16,6 +17,7 @@ app_name = "academia"
 
 urlpatterns = [
     path("", home, name="homepage"),
+    path("submit_request/<str:school_id>", submit_school_request),
     path("fetch", GetObjectListAPIView.as_view(), name="get_object"),
     path("countries", CountryListAPIView.as_view(), name="get_countries"),
     path(

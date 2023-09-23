@@ -11,6 +11,7 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework.decorators import api_view, permission_classes
 
 # Own imports
 from academia.models import Country, School, Faculty, Department
@@ -324,5 +325,19 @@ def clear_and_reset_cache(request):
     status=True,
     message="Cleared all Cache!",
     data="",
+    )
+    return Response(data=response, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes((HasAPIKey,))
+def submit_school_request(request, school_id: str):
+    school = get_object_or_404(School, id=school_id)
+    school.requests += 1
+    school.save(update_fields=['requests'])
+
+    response = success_response(
+        status=True,
+        message="Successfully submitted request",
+        data="",
     )
     return Response(data=response, status=status.HTTP_200_OK)

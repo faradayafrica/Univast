@@ -182,6 +182,12 @@ class School(models.Model):
         default=True,
         help_text="Tick to indicate no longer valid and this school will not be returned in API Response, untick to include in API Response",  # noqa
     )
+    requests = models.IntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        help_text="The number of requests submitted to make this School available on Faraday"
+    )
     type = models.CharField(
         max_length=20,
         blank=False,
